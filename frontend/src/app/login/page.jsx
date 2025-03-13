@@ -6,20 +6,25 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
+import { fetchUserPosition } from '@/api/user-position-call';
+
 function LoginPage() {
   const router = useRouter();
   const { auth, loading } = useAuth();
 
   useEffect(() => {
-
-
     if (!loading && auth) {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       if (!storedUser) {
-        router.push("/");
-      } else {
-        // router.push(`/dashboard/${storedUser.username}`);
+        console.error("No user found in localStorage");
+        router.push("/login");
       }
+      fetchUserPosition(storedUser.username)
+        .then((data) => {
+          if (data) {
+            router.push(`/dashboard/${data.position}`);
+          }
+        });
     }
   }, [auth, loading, router]);
 
