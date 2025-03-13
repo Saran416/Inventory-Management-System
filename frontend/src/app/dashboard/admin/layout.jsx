@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { fetchUserPosition } from '@/api/user-position-call';
+import { fetchEmployeePosition } from '@/api/user-service-call';
 
 
 

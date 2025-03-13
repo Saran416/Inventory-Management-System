@@ -10,7 +10,7 @@ app.use(cors);
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api", userRoutes);
+app.use("/api/user", userRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

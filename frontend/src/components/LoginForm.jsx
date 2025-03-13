@@ -10,9 +10,13 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
+
 import {useState} from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+
+import { validateLogin } from "@/api/login-calls"
 
 export function LoginForm({ className, ...props }) {
   const [username, setUsername] = useState("");
@@ -26,38 +30,27 @@ export function LoginForm({ className, ...props }) {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    const data = await validateLogin(username, password);
+
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({username: username, password: password}),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
+      const data = await validateLogin(username, password);
+  
+      if (data && data.success) {
         setAuth(true);
         console.log("Logged in");
-        localStorage.setItem("user", JSON.stringify({ username: username }));
+        localStorage.setItem("user", JSON.stringify({ username }));
         router.push(`/dashboard/${data.position}`);
       } else {
-        console.log("Invalid credentials");
+        toast.error("Login Failed", {
+          description: data?.message || "Invalid username or password",
+        });
       }
-    } catch (err) {
-      console.log("Error connecting to server");
+    } catch (error) {
+      toast.error("Error", {
+        description: error.message || "Failed to connect to the server",
+      });
     }
-
-    // if (username === "admin" && password === "admin") {
-    //   setAuth(true);
-    //   console.log("Logged in");
-    //   router.push("/dashboard/admin");
-    //
-    // }
-    // else {
-    //   alert("Invalid credentials");
-    // }
-
-
+  
   };
 
 

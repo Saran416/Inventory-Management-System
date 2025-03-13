@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { fetchUserPosition } from '@/api/user-position-call';
+import { fetchEmployeePosition } from '@/api/user-service-call';
 
 function LoginPage() {
   const router = useRouter();
@@ -19,7 +19,7 @@ function LoginPage() {
         console.error("No user found in localStorage");
         router.push("/login");
       }
-      fetchUserPosition(storedUser.username)
+      fetchEmployeePosition(storedUser.username)
         .then((data) => {
           if (data) {
             router.push(`/dashboard/${data.position}`);

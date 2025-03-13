@@ -10,7 +10,7 @@ import { NavUtilities } from '@/components/sidebar/NavUtilities';
 import { NavUser } from '@/components/sidebar/NavUser';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 
-import { fetchUserPosition } from '@/api/user-position-call';
+import { fetchEmployeePosition } from '@/api/user-service-call';
 import { generateSidebarData } from '@/handlers/sidebarHandler';
 
 // This is sample data.
@@ -29,7 +29,7 @@ export function AppSidebar({...props}) {
 
     setUser(storedUser);
     
-    fetchUserPosition(storedUser.username)
+    fetchEmployeePosition(storedUser.username)
       .then((data) => {
         if (data) {
           setSidebarData(generateSidebarData(storedUser.username, data.position));

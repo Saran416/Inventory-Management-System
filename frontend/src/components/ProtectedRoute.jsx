@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { fetchUserPosition } from '@/api/user-position-call';
+import { fetchEmployeePosition } from '@/api/user-service-call';
 
 export default function ProtectedRoute({ position, children }) {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function ProtectedRoute({ position, children }) {
       return;
     }
 
-    fetchUserPosition(storedUser.username)
+    fetchEmployeePosition(storedUser.username)
       .then((data) => {
         if (data) setUserPosition(data.position);
       })
