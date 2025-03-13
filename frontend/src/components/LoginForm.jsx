@@ -21,7 +21,6 @@ import { validateLogin } from "@/api/login-calls"
 export function LoginForm({ className, ...props }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const router = useRouter();
   const { setAuth } = useAuth();
@@ -30,26 +29,25 @@ export function LoginForm({ className, ...props }) {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (!username || !password) {
+      toast.error("Error", {
+        description: "Please fill all fields",
+      });
+      return;
+    }
+
     const data = await validateLogin(username, password);
 
-    try {
-      const data = await validateLogin(username, password);
-  
-      if (data && data.success) {
-        setAuth(true);
-        console.log("Logged in");
-        localStorage.setItem("user", JSON.stringify({ username }));
-        router.push(`/dashboard/${data.position}`);
-      } else {
-        toast.error("Login Failed", {
-          description: data?.message || "Invalid username or password",
-        });
-      }
-    } catch (error) {
-      toast.error("Error", {
-        description: error.message || "Failed to connect to the server",
-      });
-    }
+  if (data.success) {
+    setAuth(true);
+    localStorage.setItem("user", JSON.stringify({ username }));
+    router.push(`/dashboard/${data.position}`);
+  } else {
+    toast.error("Login Failed", {
+      description: data.message, // This now includes invalid credentials & server error messages
+    });
+  }
+
   
   };
 

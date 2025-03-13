@@ -7,13 +7,18 @@ export async function validateLogin(username, password) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to validate login");
+      const errorData = await response.json();
+      return { success: false, message: errorData.message || "Login failed" };
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Error validating login", error);
-    return null;
+    console.error("Error validating login:", error);
+    return { 
+      success: false, 
+      message: "Network error: Unable to connect to the server. Please check your internet connection."
+    };
+
   }
 }
 

@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from 'react';
 import { toast } from "sonner"
 
-
+import { addEmployee, employeeExists, fetchEmployeePosition } from '@/api/user-service-call';
 
 export default function Inner() {
   const [username, setUsername] = useState("");
@@ -18,15 +18,45 @@ export default function Inner() {
 
   const handleAddEmployee = async (e) => {
     e.preventDefault();
+    if (!username || !position || !password || !confirmPassword) {
+      toast.error("Error", {
+        description: "Please fill all fields",
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast.error("Error", {
         description: "Passwords don't match",
-        // action: {
-        //   label: "Undo",
-        //   onClick: () => console.log("Undo"),
-        // },
       })
       return;
+    }
+
+    // Check if employee already exists
+    const employeeExistsResponse = await employeeExists(username);
+    console.log(employeeExistsResponse);
+    if (employeeExistsResponse && employeeExistsResponse.success) {
+      toast.error("Error", {
+        description: employeeExists.message,
+      });
+      return;
+    }
+
+    const response = await addEmployee(username, position, password);
+    if (response.success) {
+      toast.success("Success", {
+        description: response.message,
+      });
+
+      // Clear input fields after success
+      setUsername("");
+      setPosition("");
+      setPassword("");
+      setConfirmPassword("");
+    } else {
+      toast.error("Error", {
+        description: response.message,
+      });
     }
   };
 
