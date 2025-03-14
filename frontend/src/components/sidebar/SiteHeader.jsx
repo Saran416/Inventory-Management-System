@@ -27,9 +27,10 @@ export function SiteHeader() {
           size="icon"
           onClick={toggleSidebar}
         >
-        <SidebarIcon />
+          <SidebarIcon />
         </Button>
-        <Breadcrumb>
+        
+        {/* <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className='hidden md:block'>
               <BreadcrumbLink href='#'>
@@ -41,7 +42,7 @@ export function SiteHeader() {
               <BreadcrumbPage>Data Fetching</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
-        </Breadcrumb>
+        </Breadcrumb> */}
       </div>
 
 

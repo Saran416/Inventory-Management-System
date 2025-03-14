@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { fetchEmployeePosition } from '@/api/user-service-call';
+import { fetchEmployeePosition } from '@/api/employee-call';
 
 function LoginPage() {
   const router = useRouter();

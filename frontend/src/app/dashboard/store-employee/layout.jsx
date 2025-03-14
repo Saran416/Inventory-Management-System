@@ -1,4 +1,3 @@
-// import ProtectedRoute from '@/components/ProtectedRoute';
 'use client';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { SiteHeader } from '@/components/sidebar/SiteHeader';
@@ -13,11 +12,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from '@/context/AuthContext';
 
 
-
-
 export default function DashBoardLayout({ children }) {
   return (
-    <ProtectedRoute position={"supervisor"}>
+    <ProtectedRoute position={"store-employee"}>
       <SidebarProvider className="flex flex-col">
         <div className="[--header-height:calc(theme(spacing.14))]">
           <SiteHeader/>

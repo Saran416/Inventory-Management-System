@@ -5,7 +5,7 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const result = await pool.query("SELECT password, position FROM employees WHERE username = $1", [username]);
+    const result = await pool.query("SELECT password, position FROM employee WHERE username = $1", [username]);
 
     if (result.rows.length === 0) {
       return res.status(401).json({ success: false, message: "Invalid username" });

@@ -1,12 +1,29 @@
 const express = require("express");
-const { getUserPosition, employeeExists, addEmployee } = require("../controllers/userController");
+const { 
+    getEmployeePosition, 
+    employeeExists, 
+    addEmployee, 
+    addAdmin, 
+    addAuditor, 
+    addWarehouseManager, 
+    addWarehouseEmployee, 
+    addStoreManager, 
+    addStoreEmployee 
+} = require("../controllers/userController");
 
 const router = express.Router();
 
 // router.get("/user/:username", getUserInfo);
-router.get("/user-position", getUserPosition);
+router.get("/employee-position", getEmployeePosition);
 router.get("/employee-exists", employeeExists);
 router.post("/add-employee", addEmployee);
+router.post("/add-admin", addAdmin);
+router.post("/add-auditor", addAuditor);
+router.post("/add-warehouse-manager", addWarehouseManager);
+router.post("/add-warehouse-employee", addWarehouseEmployee);
+router.post("/add-store-manager", addStoreManager);
+router.post("/add-store-employee", addStoreEmployee);
+
 
 
 module.exports = router;

@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { fetchEmployeePosition } from '@/api/user-service-call';
+import { fetchEmployeePosition } from '@/api/employee-call';
 
 export default function ProtectedRoute({ position, children }) {
   const router = useRouter();

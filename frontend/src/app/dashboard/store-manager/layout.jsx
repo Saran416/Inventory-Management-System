@@ -7,16 +7,14 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 import { Button } from '@/components/ui/button';
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from '@/context/AuthContext';
-import { fetchEmployeePosition } from '@/api/employee-call';
-
 
 
 export default function DashBoardLayout({ children }) {
   return (
-    <ProtectedRoute position={"admin"}>
+    <ProtectedRoute position={"store-manager"}>
       <SidebarProvider className="flex flex-col">
         <div className="[--header-height:calc(theme(spacing.14))]">
           <SiteHeader/>

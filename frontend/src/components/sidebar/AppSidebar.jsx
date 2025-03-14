@@ -10,7 +10,7 @@ import { NavUtilities } from '@/components/sidebar/NavUtilities';
 import { NavUser } from '@/components/sidebar/NavUser';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 
-import { fetchEmployeePosition } from '@/api/user-service-call';
+import { fetchEmployeePosition } from '@/api/employee-call';
 import { generateSidebarData } from '@/handlers/sidebarHandler';
 
 // This is sample data.

@@ -67,7 +67,7 @@ export function LoginForm({ className, ...props }) {
             <form onSubmit={handleLogin}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="username">Username</Label>
+                  {/* <Label htmlFor="username">Username</Label> */}
                   <Input
                     id="username"
                     type="text"
@@ -78,12 +78,13 @@ export function LoginForm({ className, ...props }) {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <div className="flex items-center">
+                  {/* <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                  </div>
+                  </div> */}
                   <Input 
                     id="password" 
                     type="password" 
+                    placeholder="password"
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                     required 
