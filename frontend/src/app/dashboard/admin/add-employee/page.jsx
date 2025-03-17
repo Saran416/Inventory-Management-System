@@ -20,7 +20,7 @@ import {
 import { fetchWarehouseLocations, fetchStoreLocations } from '@/api/facility-calls';
 import { set } from 'date-fns';
 
-export default function Inner() {
+export default function AddEmployeePage() {
   const [username, setUsername] = useState("");
   const [position, setPosition] = useState("");
   const [password, setPassword] = useState("");
