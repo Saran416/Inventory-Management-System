@@ -1,8 +1,8 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function fetchEmployeePosition(username) {
+export async function fetchEmployeePosition(employee_name) {
   try {
-    const response = await fetch(`${API_URL}/employee/employee-position?username=${encodeURIComponent(username)}`, {
+    const response = await fetch(`${API_URL}/employee/employee-position?employee_name=${encodeURIComponent(employee_name)}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" }, 
     });
@@ -24,13 +24,13 @@ export async function fetchEmployeePosition(username) {
   }
 }
 
-export async function employeeExists(username) {
-  if (!username) {
+export async function employeeExists(employee_name) {
+  if (!employee_name) {
     return { success: false, message: "Username is required" };
   }
 
   try {
-    const response = await fetch(`${API_URL}/employee/employee-exists?username=${encodeURIComponent(username)}`, {
+    const response = await fetch(`${API_URL}/employee/employee-exists?employee_name=${encodeURIComponent(employee_name)}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -49,12 +49,12 @@ export async function employeeExists(username) {
 }
 
 
-export async function addAdmin(username, password) {
+export async function addAdmin(employee_name, password) {
   try {
     const response = await fetch(`${API_URL}/employee/add-admin`, {
       method: "POST",
       headers: {"Content-Type": "application/json",},
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ employee_name, password }),
     });
 
     const responseData = await response.json();
@@ -76,12 +76,12 @@ export async function addAdmin(username, password) {
   }
 }
 
-export async function addAuditor(username, password) {
+export async function addAuditor(employee_name, password) {
   try {
     const response = await fetch(`${API_URL}/employee/add-auditor`, {
       method: "POST",
       headers: {"Content-Type": "application/json",},
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ employee_name, password }),
     });
 
     const responseData = await response.json();
@@ -102,12 +102,12 @@ export async function addAuditor(username, password) {
   }
 }
 
-export async function addWarehouseManager(username, warehouse, password) {
+export async function addWarehouseManager(employee_name, warehouseLocation, password) {
   try {
     const response = await fetch(`${API_URL}/employee/add-warehouse-manager`, {
       method: "POST",
       headers: {"Content-Type": "application/json",},
-      body: JSON.stringify({ username, warehouse, password }),
+      body: JSON.stringify({ employee_name, facility: warehouseLocation, password }),
     });
     
     const responseData = await response.json();
@@ -128,12 +128,12 @@ export async function addWarehouseManager(username, warehouse, password) {
   }
 }
 
-export async function addWarehouseEmployee(username, warehouse, password) {
+export async function addWarehouseEmployee(employee_name, warehouseLocation, password) {
   try {
     const response = await fetch(`${API_URL}/employee/add-warehouse-employee`, {
       method: "POST",
       headers: {"Content-Type": "application/json",},
-      body: JSON.stringify({ username, warehouse, password }),
+      body: JSON.stringify({ employee_name, facility: warehouseLocation, password }),
     });
 
     const responseData = await response.json();
@@ -154,12 +154,12 @@ export async function addWarehouseEmployee(username, warehouse, password) {
   }
 }
 
-export async function addStoreManager(username, store, password) {
+export async function addStoreManager(employee_name, storeLocation, password) {
   try {
     const response = await fetch(`${API_URL}/employee/add-store-manager`, {
       method: "POST",
       headers: {"Content-Type": "application/json",},
-      body: JSON.stringify({ username, store, password }),
+      body: JSON.stringify({ employee_name, facility: storeLocation, password }),
     });
 
     const responseData = await response.json();
@@ -180,12 +180,12 @@ export async function addStoreManager(username, store, password) {
   }
 }
 
-export async function addStoreEmployee(username, store, password) {
+export async function addStoreEmployee(employee_name, storeLocation, password) {
   try {
     const response = await fetch(`${API_URL}/employee/add-store-employee`, {
       method: "POST",
       headers: {"Content-Type": "application/json",},
-      body: JSON.stringify({ username, store, password }),
+      body: JSON.stringify({ employee_name, facility: storeLocation, password }),
     });
 
     const responseData = await response.json();

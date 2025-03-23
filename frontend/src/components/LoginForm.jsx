@@ -19,7 +19,7 @@ import { useAuth } from '@/context/AuthContext';
 import { validateLogin } from "@/api/login-calls"
 
 export function LoginForm({ className, ...props }) {
-  const [username, setUsername] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
   const [password, setPassword] = useState("");
 
   const router = useRouter();
@@ -29,18 +29,18 @@ export function LoginForm({ className, ...props }) {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!username || !password) {
+    if (!employeeName || !password) {
       toast.error("Error", {
         description: "Please fill all fields",
       });
       return;
     }
 
-    const data = await validateLogin(username, password);
+    const data = await validateLogin(employeeName, password);
 
   if (data.success) {
     setAuth(true);
-    localStorage.setItem("user", JSON.stringify({ username }));
+    localStorage.setItem("user", JSON.stringify({ username: employeeName }));
     router.push(`/dashboard/${data.position}`);
   } else {
     toast.error("Login Failed", {
@@ -72,8 +72,8 @@ export function LoginForm({ className, ...props }) {
                     id="username"
                     type="text"
                     placeholder="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={employeeName}
+                    onChange={(e) => setEmployeeName(e.target.value)}
                     required
                   />
                 </div>

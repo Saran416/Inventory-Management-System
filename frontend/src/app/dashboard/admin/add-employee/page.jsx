@@ -21,7 +21,7 @@ import { fetchWarehouseLocations, fetchStoreLocations } from '@/api/facility-cal
 import { set } from 'date-fns';
 
 export default function AddEmployeePage() {
-  const [username, setUsername] = useState("");
+  const [employeeName, setEmmployeeName] = useState("");
   const [position, setPosition] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,7 +33,7 @@ export default function AddEmployeePage() {
   const [selectedWarehouseLocation, setSelectedWarehouseLocation] = useState("");
 
   const positions = [
-    ["admin", "Admin", addAdmin],
+    // ["admin", "Admin"],
     ["auditor", "Auditor"],
     ["warehouse-manager", "Warehouse Manager"],
     ["warehouse-employee", "Warehouse Employee"],
@@ -82,7 +82,7 @@ export default function AddEmployeePage() {
 
   const handleAddEmployee = async (e) => {
     e.preventDefault();
-    if (!username || !position || !password || !confirmPassword) {
+    if (!employeeName || !position || !password || !confirmPassword) {
       toast.error("Error", {
         description: "Please fill all fields",
       });
@@ -112,7 +112,7 @@ export default function AddEmployeePage() {
     }
 
     // Check if employee already exists
-    const employeeExistsResponse = await employeeExists(username);
+    const employeeExistsResponse = await employeeExists(employeeName);
     console.log(employeeExistsResponse);
     if (employeeExistsResponse && employeeExistsResponse.success) {
       toast.error("Error", {
@@ -123,17 +123,17 @@ export default function AddEmployeePage() {
 
     let response;
     if (position === "admin") {
-      response = await addAdmin(username, password);
+      response = await addAdmin(employeeName, password);
     } else if (position === "auditor") {
-      response = await addAuditor(username, password);
+      response = await addAuditor(employeeName, password);
     } else if (position === "warehouse-manager") {
-      response = await addWarehouseManager(username, selectedWarehouseLocation, password);
+      response = await addWarehouseManager(employeeName, selectedWarehouseLocation, password);
     } else if (position === "warehouse-employee") {
-      response = await addWarehouseEmployee(username, selectedWarehouseLocation, password);
+      response = await addWarehouseEmployee(employeeName, selectedWarehouseLocation, password);
     } else if (position === "store-manager") {
-      response = await addStoreManager(username, selectedStoreLocation, password);
+      response = await addStoreManager(employeeName, selectedStoreLocation, password);
     } else if (position === "store-employee") {
-      response = await addStoreEmployee(username, selectedStoreLocation, password);
+      response = await addStoreEmployee(employeeName, selectedStoreLocation, password);
     }
 
     // response = await addEmployee(username, position, password);
@@ -143,7 +143,7 @@ export default function AddEmployeePage() {
       });
 
       // Clear input fields after success
-      setUsername("");
+      setEmmployeeName("");
       setPosition("");
       setPassword("");
       setConfirmPassword("");
@@ -168,8 +168,8 @@ export default function AddEmployeePage() {
               id="username"
               type="text"
               placeholder="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={employeeName}
+              onChange={(e) => setEmmployeeName(e.target.value)}
               required
             />
           </div>
@@ -209,7 +209,7 @@ export default function AddEmployeePage() {
                   </SelectTrigger>
                   <SelectContent>
                     {warehouseLocations.map((location) => (
-                      <SelectItem key={location.id} value={location.id}>
+                      <SelectItem key={location.id} value={location.name}>
                         {location.name}
                       </SelectItem>
                     ))}
@@ -228,7 +228,7 @@ export default function AddEmployeePage() {
                   </SelectTrigger>
                   <SelectContent>
                     {storeLocations.map((location) => (
-                      <SelectItem key={location.id} value={location.id}>
+                      <SelectItem key={location.id} value={location.name}>
                         {location.name}
                       </SelectItem>
                     ))}

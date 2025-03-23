@@ -2,21 +2,19 @@ const express = require("express");
 const { 
     getEmployeePosition, 
     employeeExists, 
-    addEmployee, 
     addAdmin, 
     addAuditor, 
     addWarehouseManager, 
     addWarehouseEmployee, 
     addStoreManager, 
     addStoreEmployee 
-} = require("../controllers/userController");
+} = require("../controllers/employeeController");
 
 const router = express.Router();
 
 // router.get("/user/:username", getUserInfo);
 router.get("/employee-position", getEmployeePosition);
 router.get("/employee-exists", employeeExists);
-router.post("/add-employee", addEmployee);
 router.post("/add-admin", addAdmin);
 router.post("/add-auditor", addAuditor);
 router.post("/add-warehouse-manager", addWarehouseManager);

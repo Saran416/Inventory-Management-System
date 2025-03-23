@@ -11,26 +11,19 @@ CREATE TABLE employee (
     employee_ID SERIAL PRIMARY KEY,
     employee_name VARCHAR(50) UNIQUE NOT NULL,
     position VARCHAR(20) NOT NULL,
-    works_in INT NULL,
+    works_in BIGINT UNSIGNED NULL,
     password TEXT NOT NULL,
     FOREIGN KEY (works_in) REFERENCES facility(facility_ID) ON DELETE SET NULL
 );
+
+-- INSERT INTO employee (employee_name, position, works_in, password)
+-- VALUES ('admin1', 'admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJlItrnBJIphQALN6');
+
 
 -- Create Brand Table
 CREATE TABLE brand (
     brand_name VARCHAR(50) PRIMARY KEY,
     contact_info TEXT
-);
-
--- Create Product Table
-CREATE TABLE product (
-    product_ID SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    category_ID INT NOT NULL,
-    brand_ID INT NOT NULL,
-    FOREIGN KEY (category_ID) REFERENCES category(category_ID) ON DELETE CASCADE,
-    FOREIGN KEY (brand_ID) REFERENCES brand(brand_ID) ON DELETE CASCADE
 );
 
 -- Create Category Table
@@ -39,10 +32,23 @@ CREATE TABLE category (
     category_name VARCHAR(100) UNIQUE NOT NULL
 );
 
+-- Create Product Table
+CREATE TABLE product (
+    product_ID SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    category_ID BIGINT UNSIGNED NOT NULL,
+    brand_name VARCHAR(50) NOT NULL,
+    FOREIGN KEY (category_ID) REFERENCES category(category_ID) ON DELETE CASCADE,
+    FOREIGN KEY (brand_name) REFERENCES brand(brand_name) ON DELETE CASCADE
+);
+
+
+
 -- Create Stock Table
 CREATE TABLE stock (
-    product_ID INT NOT NULL,
-    facility_ID INT NOT NULL,
+    product_ID BIGINT UNSIGNED NOT NULL,
+    facility_ID BIGINT UNSIGNED NOT NULL,
     quantity INT NOT NULL,
     reorder_level INT NOT NULL,
     PRIMARY KEY (product_ID, facility_ID),
@@ -54,9 +60,9 @@ CREATE TABLE stock (
 CREATE TABLE inventory_transactions (
     transaction_ID SERIAL PRIMARY KEY,
     Time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    product_ID INT REFERENCES product(product_ID) ON DELETE CASCADE,
-    requested_to INT REFERENCES facility(facility_ID) ON DELETE CASCADE,
-    requested_by INT REFERENCES employee(employee_ID) ON DELETE CASCADE,
+    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE,
+    requested_to BIGINT UNSIGNED REFERENCES facility(facility_ID) ON DELETE CASCADE,
+    requested_by BIGINT UNSIGNED REFERENCES employee(employee_ID) ON DELETE CASCADE,
     quantity INT NOT NULL,
     processed BOOLEAN NOT NULL DEFAULT FALSE
 );
@@ -65,8 +71,8 @@ CREATE TABLE inventory_transactions (
 CREATE TABLE factory_orders (
     order_ID SERIAL PRIMARY KEY,
     order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    product_ID INT REFERENCES product(product_ID) ON DELETE CASCADE,
-    ordered_by INT REFERENCES employee(employee_ID) ON DELETE CASCADE,
+    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE,
+    ordered_by BIGINT UNSIGNED REFERENCES employee(employee_ID) ON DELETE CASCADE,
     quantity INT NOT NULL,
     processed BOOLEAN NOT NULL DEFAULT FALSE
 );
@@ -74,7 +80,7 @@ CREATE TABLE factory_orders (
 -- Create Customer Table
 CREATE TABLE customer (
     customer_ID SERIAL PRIMARY KEY,
-    category_name VARCHAR(50) NOT NULL,
+    customer_name VARCHAR(50) NOT NULL,
     mobile VARCHAR(15) UNIQUE NOT NULL
 );
 
@@ -82,17 +88,17 @@ CREATE TABLE customer (
 CREATE TABLE sales (
     sale_ID SERIAL PRIMARY KEY,
     sale_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    facility_ID INT REFERENCES facility(facility_ID) ON DELETE CASCADE,
-    employee_ID INT REFERENCES employee(employee_ID) ON DELETE CASCADE,
-    customer_ID INT REFERENCES customer(customer_ID) ON DELETE CASCADE,
-    product_ID INT REFERENCES product(product_ID) ON DELETE CASCADE,
+    facility_ID BIGINT UNSIGNED REFERENCES facility(facility_ID) ON DELETE CASCADE,
+    employee_ID BIGINT UNSIGNED REFERENCES employee(employee_ID) ON DELETE CASCADE,
+    customer_ID BIGINT UNSIGNED REFERENCES customer(customer_ID) ON DELETE CASCADE,
+    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE,
     quantity INT NOT NULL
 );
 
 -- Adding Constraints
 ALTER TABLE product ADD CONSTRAINT positive_price CHECK (price >= 0);
-ALTER TABLE sales ADD CONSTRAINT positive_quantity CHECK (quantity > 0);
-ALTER TABLE factory_orders ADD CONSTRAINT positive_quantity CHECK (quantity > 0);
-ALTER TABLE inventory_transactions ADD CONSTRAINT positive_quantity CHECK (quantity > 0);
-ALTER TABLE stock ADD CONSTRAINT positive_quantity CHECK (quantity > 0);
+ALTER TABLE sales ADD CONSTRAINT sales_positive_quantity CHECK (quantity > 0);
+ALTER TABLE factory_orders ADD CONSTRAINT factory_orders_positive_quantity CHECK (quantity > 0);
+ALTER TABLE inventory_transactions ADD CONSTRAINT inventory_transactions_positive_quantity CHECK (quantity > 0);
+ALTER TABLE stock ADD CONSTRAINT stock_positive_quantity CHECK (quantity > 0);
 ALTER TABLE stock ADD CONSTRAINT positive_reorder_level CHECK (reorder_level > 0);

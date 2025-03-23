@@ -2,17 +2,20 @@ const pool = require("../config/db");
 const bcrypt = require("bcryptjs");
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { employee_name, password } = req.body;
 
   try {
-    const result = await pool.query("SELECT password, position FROM employee WHERE username = $1", [username]);
-
-    if (result.rows.length === 0) {
+    const [rows] = await pool.query(
+      "SELECT password, position FROM employee WHERE employee_name = ?",
+      [employee_name]
+    );
+    
+    if (rows.length === 0) {
       return res.status(401).json({ success: false, message: "Invalid username" });
     }
 
-    const storedPassword = result.rows[0].password;
-    const position = result.rows[0].position;
+    const storedPassword = rows[0].password;
+    const position = rows[0].position;
 
     const passwordMatch = await bcrypt.compare(password, storedPassword);
     if (!passwordMatch) {

@@ -1,79 +1,66 @@
-import { SquareTerminal, Bot, BookOpen, Settings2, Frame, PieChart, Map } from "lucide-react";
+import { SquareTerminal, Bot, BookOpen, Settings2, Frame, PieChart, Map, Users, Store, FolderKanban } from "lucide-react";
 
-export function generateSidebarData(username, position) {
+export function generateSidebarData(employee_name, position) {
   if (position === "admin") {
     return {
-      user: { name: username, position },
+      user: { name: employee_name, position },
       navMain: [
         {
           title: "Employee",
           url: "#",
-          icon: '',
-          isActive: true,
+          icon: Users,
+          isActive: false,
           items: [
+            { title: "View employee", url: "/dashboard/admin/view-employee" },
             { title: "Add employee", url: "/dashboard/admin/add-employee" },
-            { title: "Inner", url: "/dashboard/inner" },
-            { title: "Settings", url: "#" },
+            { title: "Delete employee", url: "/dashboard/admin/delete-employee" },
           ],
         },
         {
-          title: "Sales",
+          title: "Facility",
           url: "#",
-          icon: '',
-          isActive: true,
+          icon: Store,
+          isActive: false,
           items: [
-            { title: "View sales", url: "/dashboard/admin" },
-            { title: "Inner", url: "/dashboard/inner" },
-            { title: "Settings", url: "#" },
+            { title: "View facility", url: "/dashboard/admin/view-facility" },
+            { title: "Add facility", url: "/dashboard/admin/add-facility" },
+            { title: "Delete facility", url: "/dashboard/admin/delete-facility" },
           ],
         },
         {
-          title: "Models",
+          title: "Brands",
           url: "#",
-          icon: Bot,
+          icon: FolderKanban,
+          isActive: false,
           items: [
-            { title: "Genesis", url: "#" },
-            { title: "Explorer", url: "#" },
-            { title: "Quantum", url: "#" },
+            { title: "View brand", url: "/dashboard/admin/view-brand" },
+            { title: "Add brand", url: "/dashboard/admin/add-brand" },
+            { title: "Delete brand", url: "/dashboard/admin/delete-brand" },
           ],
         },
         {
-          title: "Documentation",
+          title: "Products",
           url: "#",
-          icon: BookOpen,
+          icon: FolderKanban,
+          isActive: false,
           items: [
-            { title: "Introduction", url: "dashboard" },
-            { title: "Get Started", url: "#" },
-            { title: "Tutorials", url: "#" },
-            { title: "Changelog", url: "#" },
-          ],
-        },
-        {
-          title: "Settings",
-          url: "#",
-          icon: Settings2,
-          items: [
-            { title: "General", url: "#" },
-            { title: "Team", url: "#" },
-            { title: "Billing", url: "#" },
-            { title: "Limits", url: "#" },
+            { title: "View product", url: "/dashboard/admin/view-product" },
+            { title: "Add product", url: "/dashboard/admin/add-product" },
+            { title: "Delete product", url: "/dashboard/admin/delete-product" },
           ],
         },
       ],
       utilities: [
-        { title: "Add employee", url: "/dashboard/admin/add-employee" },
-        // { title: "Feedback", url: "#" },
-        // { title: "Settings", url: "#" },
-      ],
-      projects: [
-        { name: "Add employee", url: "/dashboard/admin/add-employee", icon: Frame },
-        { name: "Sales & Marketing", url: "#", icon: PieChart },
-        { name: "Travel", url: "#", icon: Map },
+        { title: "Customers", url: "/dashboard/admin/customers" },
+        { title: "Stock", url: "/dashboard/admin/stock" },
+        { title: "Sales", url: "/dashboard/admin/sales" },
+        { title: "Inventory transactions", url: "/dashboard/admin/inventory-transactions" },
+        { title: "Factory orders", url: "/dashboard/admin/factory-orders" },
       ],
     };
   } else if (position === "auditor") {
     return {
-      user: { name: username, position },
+      user: { name: employee_name, position },
       navMain: [
         {
           title: "Playground",
@@ -120,7 +107,7 @@ export function generateSidebarData(username, position) {
         },
       ],
       utilities: [
-        { title: "Add employee", url: "/dashboard/admin/add-employee" },
+        // { title: "Add employee", url: "/dashboard/admin/add-employee" },
         // { title: "Feedback", url: "#" },
         // { title: "Settings", url: "#" },
       ],

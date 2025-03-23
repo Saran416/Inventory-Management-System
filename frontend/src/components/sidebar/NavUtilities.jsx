@@ -17,7 +17,7 @@ export function NavUtilities({utilities}) {
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Utilities</SidebarGroupLabel>
+      {/* <SidebarGroupLabel>Utilities</SidebarGroupLabel> */}
       <SidebarMenu>
         {utilities.map((item) => (
           <SidebarMenuItem key={item.title}>
