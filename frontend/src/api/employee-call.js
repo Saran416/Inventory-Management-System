@@ -24,6 +24,27 @@ export async function fetchEmployeePosition(employee_name) {
   }
 }
 
+export async function fetchAllEmployees(employee_name, position, location) {
+  try {
+    const queryParams = `?employee_name=${encodeURIComponent(employee_name)}&position=${encodeURIComponent(position)}&location=${encodeURIComponent(location)}`
+
+    const response = await fetch(`${API_URL}/employee/fetch-all-employees${queryParams}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    // console.log(response);
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, message: errorData.message || "Failed to fetch employees" };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return { success: false, message: "Network error: Unable to connect to the server." };
+  }
+}
+
 export async function employeeExists(employee_name) {
   if (!employee_name) {
     return { success: false, message: "Username is required" };
@@ -47,7 +68,6 @@ export async function employeeExists(employee_name) {
     return { success: false, message: "Network error: Unable to connect to the server." };
   }
 }
-
 
 export async function addAdmin(employee_name, password) {
   try {
@@ -216,10 +236,8 @@ export async function addEmployee(username, position, password) {
       body: JSON.stringify({ username, position, password }),
     });
 
-    console.log("Response Status:", response.status);
 
     const responseData = await response.json();
-    console.log("Response Body:", responseData);
 
     if (!response.ok) {
       return { success: false, message: responseData.message || "Failed to add employee" };

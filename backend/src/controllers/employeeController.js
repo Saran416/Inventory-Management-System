@@ -26,6 +26,54 @@ exports.getEmployeePosition = async (req, res) => {
   }
 };
 
+exports.getAllEmployees = async (req, res) => {
+  const { employee_name, position, location } = req.query;
+
+  try {
+    let query = `
+      SELECT 
+        e.employee_ID, 
+        e.employee_name, 
+        e.position, 
+        COALESCE(f.location, 'Not Assigned') AS facility_location
+      FROM employee e
+      LEFT JOIN facility f ON e.works_in = f.facility_ID
+    `;
+    
+    let conditions = [];
+    let queryParams = [];
+
+    if (employee_name) {
+      conditions.push(`e.employee_name LIKE ?`);
+      queryParams.push(`%${employee_name}%`);
+    }
+
+    if (position) {
+      conditions.push(`e.position = ?`)
+      queryParams.push(`${position}`);
+    }
+
+    if (location) {
+      conditions.push(`f.location LIKE ?`)
+      queryParams.push(`%${location}`);
+    }
+
+    if (conditions.length > 0) {
+      query += ` WHERE ` + conditions.join(" AND ");
+    }
+
+    const [result] = await pool.query(query, queryParams);
+
+    res.json({ success: true, employees: result });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+};
+
 exports.employeeExists = async (req, res) => {
   const { employee_name } = req.query;
 

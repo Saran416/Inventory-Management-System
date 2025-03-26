@@ -35,10 +35,10 @@ export default function AddEmployeePage() {
   const positions = [
     // ["admin", "Admin"],
     ["auditor", "Auditor"],
-    ["warehouse-manager", "Warehouse Manager"],
-    ["warehouse-employee", "Warehouse Employee"],
-    ["store-manager", "Store Manager"],
-    ["store-employee", "Store Employee"],
+    ["warehouse_manager", "Warehouse Manager"],
+    ["warehouse_employee", "Warehouse Employee"],
+    ["store_manager", "Store Manager"],
+    ["store_employee", "Store Employee"],
   ];
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function AddEmployeePage() {
           name: location, // Store the string as 'name'
         }));
         setWarehouseLocations(formattedLocations);
-        console.log("Formatted Warehouse Locations:", formattedLocations);
+        // +++console.log("Formatted Warehouse Locations:", formattedLocations);
       } else {
         toast.error("Error", {
           description: warehouseLocationsResponse.message,
@@ -89,14 +89,14 @@ export default function AddEmployeePage() {
       return;
     }
 
-    if ((position === "warehouse-manager" || position === "warehouse-employee") && !selectedWarehouseLocation) {
+    if ((position === "warehouse_manager" || position === "warehouse_employee") && !selectedWarehouseLocation) {
       toast.error("Error", {
         description: "Please select a warehouse location",
       });
       return;
     }
 
-    if ((position === "store-manager" || position === "store-employee") && !selectedStoreLocation) {
+    if ((position === "store_manager" || position === "store_employee") && !selectedStoreLocation) {
       toast.error("Error", {
         description: "Please select a store location",
       });
@@ -113,7 +113,7 @@ export default function AddEmployeePage() {
 
     // Check if employee already exists
     const employeeExistsResponse = await employeeExists(employeeName);
-    console.log(employeeExistsResponse);
+    // +++console.log(employeeExistsResponse);
     if (employeeExistsResponse && employeeExistsResponse.success) {
       toast.error("Error", {
         description: employeeExists.message,
@@ -126,13 +126,13 @@ export default function AddEmployeePage() {
       response = await addAdmin(employeeName, password);
     } else if (position === "auditor") {
       response = await addAuditor(employeeName, password);
-    } else if (position === "warehouse-manager") {
+    } else if (position === "warehouse_manager") {
       response = await addWarehouseManager(employeeName, selectedWarehouseLocation, password);
-    } else if (position === "warehouse-employee") {
+    } else if (position === "warehouse_employee") {
       response = await addWarehouseEmployee(employeeName, selectedWarehouseLocation, password);
-    } else if (position === "store-manager") {
+    } else if (position === "store_manager") {
       response = await addStoreManager(employeeName, selectedStoreLocation, password);
-    } else if (position === "store-employee") {
+    } else if (position === "store_employee") {
       response = await addStoreEmployee(employeeName, selectedStoreLocation, password);
     }
 
@@ -201,7 +201,7 @@ export default function AddEmployeePage() {
           </div>
 
           {
-            (position === "warehouse-manager" || position === "warehouse-employee") && (
+            (position === "warehouse_manager" || position === "warehouse_employee") && (
               <div className="grid gap-2">
                 <Select onValueChange={setSelectedWarehouseLocation} value={selectedWarehouseLocation}>
                   <SelectTrigger className="w-full">
@@ -220,7 +220,7 @@ export default function AddEmployeePage() {
           }
 
           {
-            (position === "store-manager" || position === "store-employee") && (
+            (position === "store_manager" || position === "store_employee") && (
               <div className="grid gap-2">
                 <Select onValueChange={setSelectedStoreLocation} value={selectedStoreLocation}>
                   <SelectTrigger className="w-full">

@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 
-import { fetchSales } from "@/api/sales-call";
+import { fetchCustomers } from "@/api/customer-calls";
 
 import { debounce } from "lodash";
 
@@ -60,32 +60,9 @@ import { Label } from "@/components/ui/label"
 
 export const columns = [
   {
-    accessorKey: "sale_ID",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Sales ID
-        <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("sale_ID")}</div>,
-  },
-  {
-    accessorKey: "sale_time",
-    header: "Time",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("sale_time")}</div>,
-  },
-  {
-    accessorKey: "facility_location",
-    header: "Location",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("facility_location")}</div>,
-  },
-  {
-    accessorKey: "employee_name",
-    header: "Employee name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("employee_name")}</div>,
+    accessorKey: "customer_ID",
+    header: "Customer ID",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("customer_ID")}</div>,
   },
   {
     accessorKey: "customer_name",
@@ -93,82 +70,45 @@ export const columns = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("customer_name")}</div>,
   },
   {
-    accessorKey: "product_name",
-    header: "Product name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("product_name")}</div>,
+    accessorKey: "mobile",
+    header: "Mobile number",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("mobile")}</div>,
   },
-  {
-    accessorKey: "quantity",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Quantity
-        <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("quantity")}</div>,
-  },
+
 ];
 
-export default function SalesPage() {
-  const [selectedStartDate, setSelectedStartDate] = useState("");
-  const [selectedEndDate, setSelectedEndDate] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedSalesman, setSelectedSalesman] = useState("");
-  const [selectedProductName, setSelectedProductName] = useState([]);
+export default function CustomerPage() {
+  const [selectedCustomerName, setSelectedCustomerName] = useState("");
 
 
-  const [salesData, setSalesData] = useState([]);
-  
-  const fetchSalesWrapper = async (start_date, end_date, location, salesman_name, product_name) => {
-    let start_date_query = start_date || "";
-    let end_date_query = end_date || "";
-    let location_query = location || "";
-    let salesman_name_query = salesman_name || "";
-    let product_name_query = product_name || "";
+  const [customerData, setCustomerData] = useState([]);
+  const fetchCustomerWrapper = async (customer_name) => {
     
-    const salesResponse = await fetchSales(start_date_query, end_date_query, location_query, salesman_name_query, product_name_query);
-
-    if (!salesResponse.success) {
-      console.error("Error fetching sales data:", salesResponse.message);
+    let customer_name_query = customer_name || "";
+    
+    
+    const stockResponse = await fetchCustomers(customer_name_query);
+    if (!stockResponse.success) {
+      console.error("Error fetching sales data:", stockResponse.message);
       return;
     }
-    return salesResponse.sales;
-  }
-
-  const applyFilter = async () => {
-    const salesDdad = await fetchSalesWrapper(
-      selectedStartDate,
-      selectedEndDate,
-      selectedLocation,
-      selectedSalesman,
-      selectedProductName
-    );
-    setSalesData(salesDdad);
+    return stockResponse.sales;
   }
 
   useEffect(() => {
     const fetchData = debounce(async () => {
-      const salesDdad = await fetchSalesWrapper(
-        selectedStartDate,
-        selectedEndDate,
-        selectedLocation,
-        selectedSalesman,
-        selectedProductName
+      const customerDdad = await fetchCustomerWrapper(
+        selectedCustomerName
       );
   
       // console.log("salesDdad", salesDdad);
-      setSalesData(salesDdad);
+      setCustomerData(customerDdad);
     }, 300); // 300ms delay to prevent excessive API calls
   
     fetchData();
   
     return () => fetchData.cancel(); // Cleanup on unmount
-  }, [
-    // selectedStartDate, selectedEndDate, selectedLocation, selectedSalesman, selectedProductName
-  ]);
+  }, [selectedCustomerName]);
   
 
 
@@ -178,7 +118,7 @@ export default function SalesPage() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: salesData,
+    data: customerData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -220,40 +160,16 @@ export default function SalesPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="date" className="text-right">
-                  Start Date
-                </Label>
-                <Input id="selectedStartDate" value={selectedStartDate} placeholder="YYYY-MM-DD" onChange={(e) => setSelectedStartDate(e.target.value)}  className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="date" className="text-right">
-                  End Date
-                </Label>
-                <Input id="selectedEndDate" value={selectedEndDate} placeholder="YYYY-MM-DD" onChange={(e) => setSelectedEndDate(e.target.value)}  className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Location
-                </Label>
-                <Input id="location" value={selectedLocation} className="col-span-3" onChange={(e) => setSelectedLocation(e.target.value)} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Salesman
+                  Customer
                 </Label>
-                <Input id="name" value={selectedSalesman} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedSalesman(e.target.value)}/>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Product
-                </Label>
-                <Input id="name" value={selectedProductName} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedProductName(e.target.value)}/>
+                <Input id="name" value={selectedCustomerName} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedCustomerName(e.target.value)}/>
               </div>
               
             </div>
-            <DialogFooter>
-              <Button type="submit" onClick={applyFilter}>Apply Filter</Button>
-            </DialogFooter>
+            {/* <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter> */}
           </DialogContent>
         </Dialog>
 

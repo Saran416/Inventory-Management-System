@@ -1,24 +1,19 @@
 const pool = require("../config/db");
 
-exports.getSales = async (req, res) => {
-  const { start_date, end_date, location, salesman_name, product_name } = req.query;
+exports.getStock = async (req, res) => {
+  const { location, product_name } = req.query;
 
 
   try {
     let query = `
       SELECT 
-        s.sale_ID,
-        s.sale_time,
-        f.location AS facility_location,
-        e.employee_name,
-        c.customer_name,
-        p.name AS product_name,
-        s.quantity
-      FROM sales s
-      JOIN facility f ON s.facility_ID = f.facility_ID
-      JOIN employee e ON s.employee_ID = e.employee_ID
-      JOIN customer c ON s.customer_ID = c.customer_ID
-      JOIN product p ON s.product_ID = p.product_ID
+            p.name AS product_name,
+            f.location AS facility_location,
+            s.quantity,
+            s.reorder_level
+        FROM stock s
+        JOIN product p ON s.product_ID = p.product_ID
+        JOIN facility f ON s.facility_ID = f.facility_ID
     `;
 
     // Array to store conditions
@@ -26,24 +21,9 @@ exports.getSales = async (req, res) => {
     let queryParams = [];
 
     // Add conditions dynamically
-    if (start_date) {
-      conditions.push(`s.sale_time >= ?`);
-      queryParams.push(start_date);
-    }
-
-    if (end_date) {
-      conditions.push(`s.sale_time <= ?`);
-      queryParams.push(end_date);
-    }
-
     if (location) {
       conditions.push(`f.location LIKE ?`);
       queryParams.push(`%${location}%`);
-    }
-
-    if (salesman_name) {
-      conditions.push(`e.employee_name LIKE ?`);
-      queryParams.push(`%${salesman_name}%`);
     }
 
     if (product_name) {

@@ -11,9 +11,8 @@ export function generateSidebarData(employee_name, position) {
           icon: Users,
           isActive: false,
           items: [
-            { title: "View employee", url: "/dashboard/admin/view-employee" },
+            { title: "View/Delete employee", url: "/dashboard/admin/employee" },
             { title: "Add employee", url: "/dashboard/admin/add-employee" },
-            { title: "Delete employee", url: "/dashboard/admin/delete-employee" },
           ],
         },
         {

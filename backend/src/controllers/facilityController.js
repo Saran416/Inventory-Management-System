@@ -1,5 +1,4 @@
 const pool = require("../config/db");
-const bcrypt = require("bcryptjs");
 
 exports.getAllFacilities = async (req, res) => {
   try {

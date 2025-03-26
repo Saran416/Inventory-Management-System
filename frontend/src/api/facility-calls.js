@@ -7,10 +7,8 @@ export async function fetchAllFacilities() {
       method: "GET",
     });
 
-    console.log("Response Status:", response.status);
 
     const responseData = await response.json();
-    console.log("Response Body:", responseData);
 
     if (!response.ok) {
       return { success: false, message: responseData.message || "Failed to fetch facilities" };
@@ -35,10 +33,8 @@ export async function fetchWarehouseLocations() {
       method: "GET",
     });
 
-    console.log("Response Status:", response.status);
 
     const responseData = await response.json();
-    console.log("Response Body:", responseData);
 
     if (!response.ok) {
       return { success: false, message: responseData.message || "Failed to fetch warehouse facilities" };
@@ -63,10 +59,8 @@ export async function fetchStoreLocations() {
       method: "GET",
     });
 
-    console.log("Response Status:", response.status);
 
     const responseData = await response.json();
-    console.log("Response Body:", responseData);
 
     if (!response.ok) {
       return { success: false, message: responseData.message || "Failed to fetch store facilities" };
