@@ -50,8 +50,8 @@ INSERT INTO stock (product_ID, facility_ID, quantity, reorder_level) VALUES
 
 -- Insert Inventory Transactions
 INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed) VALUES
-(1, 3, 1, 5, TRUE),
-(2, 4, 3, 8, FALSE);
+(1, 1, 4, 5, TRUE),
+(2, 2, 3, 8, FALSE);
 
 -- Insert Factory Orders
 INSERT INTO factory_orders (product_ID, ordered_by, quantity, processed) VALUES
