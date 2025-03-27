@@ -21,9 +21,8 @@ export function generateSidebarData(employee_name, position) {
           icon: Store,
           isActive: false,
           items: [
-            { title: "View facility", url: "/dashboard/admin/view-facility" },
+            { title: "View/Delete facility", url: "/dashboard/admin/facility" },
             { title: "Add facility", url: "/dashboard/admin/add-facility" },
-            { title: "Delete facility", url: "/dashboard/admin/delete-facility" },
           ],
         },
         {
@@ -32,9 +31,8 @@ export function generateSidebarData(employee_name, position) {
           icon: FolderKanban,
           isActive: false,
           items: [
-            { title: "View brand", url: "/dashboard/admin/view-brand" },
+            { title: "View/Delete brand", url: "/dashboard/admin/brand" },
             { title: "Add brand", url: "/dashboard/admin/add-brand" },
-            { title: "Delete brand", url: "/dashboard/admin/delete-brand" },
           ],
         },
         {
@@ -43,9 +41,8 @@ export function generateSidebarData(employee_name, position) {
           icon: FolderKanban,
           isActive: false,
           items: [
-            { title: "View product", url: "/dashboard/admin/view-product" },
+            { title: "View/Delete product", url: "/dashboard/admin/product" },
             { title: "Add product", url: "/dashboard/admin/add-product" },
-            { title: "Delete product", url: "/dashboard/admin/delete-product" },
           ],
         },
       ],

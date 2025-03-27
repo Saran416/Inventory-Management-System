@@ -358,3 +358,11 @@ exports.addStoreEmployee = async (req, res) => {
     });
   }
 };
+
+// TODO: Implement this function
+exports.deleteEmployee = async (req, res) => {
+  const { employee_ID } = req.body;
+
+  res.json({ success: true, message: "Employee deleted successfully." });
+  
+}

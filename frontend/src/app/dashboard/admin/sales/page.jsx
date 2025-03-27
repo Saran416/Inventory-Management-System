@@ -53,6 +53,7 @@ import {
 } from "@/components/ui/dialog"
 
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner";
 
 
 
@@ -75,8 +76,23 @@ export const columns = [
   {
     accessorKey: "sale_time",
     header: "Time",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("sale_time")}</div>,
+    cell: ({ row }) => {
+      const rawDate = row.getValue("sale_time");
+      const date = new Date(rawDate);
+      const formattedDate = date.toISOString().split("T")[0];
+      const formattedTime = date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      return (
+        <div className="capitalize">
+          {formattedDate} {formattedTime}
+        </div>
+      );
+    },
   },
+  
   {
     accessorKey: "facility_location",
     header: "Location",
@@ -139,6 +155,15 @@ export default function SalesPage() {
   }
 
   const applyFilter = async () => {
+
+    if (
+      (selectedStartDate && !/^\d{4}-\d{2}-\d{2}$/.test(selectedStartDate)) ||
+      (selectedEndDate && !/^\d{4}-\d{2}-\d{2}$/.test(selectedEndDate))
+    ) {
+      toast.error("Invalid date format. Please use YYYY-MM-DD");
+      return;
+    }
+
     const salesDdad = await fetchSalesWrapper(
       selectedStartDate,
       selectedEndDate,

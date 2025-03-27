@@ -226,33 +226,30 @@ export async function addStoreEmployee(employee_name, storeLocation, password) {
   }
 }
 
-export async function addEmployee(username, position, password) {
+export async function deleteEmployee(employee_ID) {
   try {
-    const response = await fetch(`${API_URL}/employee/add-employee`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, position, password }),
+    const response = await fetch(`${API_URL}/employee/delete-employee`, {
+      method: "DELETE",
+      headers: {"Content-Type": "application/json",},
+      body: JSON.stringify({ employee_ID }),
     });
 
+    console.log(response);
 
     const responseData = await response.json();
 
     if (!response.ok) {
-      return { success: false, message: responseData.message || "Failed to add employee" };
+      return { success: false, message: responseData.message || "Failed to delete employee" };
     }
-
 
     return responseData;
 
   } catch (error) {
-    console.error("Error adding user:", error);
+    console.error("Error deleting user:", error);
     
     return { 
       success: false, 
       message: "Network error: Unable to connect to the server.",
     };
-
   }
 }

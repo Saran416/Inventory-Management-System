@@ -1,8 +1,10 @@
 'use client'
 import { useEffect, useState } from "react";
 
-import { fetchAllEmployees } from "@/api/employee-call";
-import { deleteEmployee } from "@/api/employee-call";
+import { fetchFacilities } from "@/api/facility-calls";
+import { deleteFacility } from "@/api/facility-calls";
+
+import { fetchBrands, deleteBrand } from "@/api/brand-calls";
 
 import { debounce } from "lodash";
 
@@ -69,75 +71,67 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 
 
-const positions = [
-  ["admin", "Admin"],
-  ["auditor", "Auditor"],
-  ["warehouse_manager", "Warehouse Manager"],
-  ["warehouse_employee", "Warehouse Employee"],
-  ["store_manager", "Store Manager"],
-  ["store_employee", "Store Employee"],
+const facility_types = [
   ["all", "All"],
+  ["store", "Store"],
+  ["warehouse", "Warehouse"],
 ];
 
 
 
 
-export default function EmployeePage() {
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedPosition, setSelectedPosition] = useState("");
-  const [selectedEmployeeName, setSelectedEmployeeName] = useState("");
+export default function FacilityPage() {
+  const [selectedFacilityType, setSelectedFacilityType] = useState("all");
+  const [selectedFacilityLocation, setSelectedFacilityLocation] = useState("");
 
-  const [employeeData, setEmployeeData] = useState([]);
+  const [selectedBrandName, setSelectedBrandName] = useState("");
+  const [selectedBrandContactInfo, setSelectedBrandContactInfo] = useState("");
+  const [brandData, setBrandData] = useState([]);
 
-  const fetchEmployeesWrapper = async (employee_name, position, location) => {
-    let employee_name_query = employee_name || "";
-    let position_query = (position === "all") ? "" : position;
-    position_query = position_query || "";
-    let location_query = location || "";
+  const fetchBrandsWrapper = async (brand_name) => {
+    let brand_name_query = brand_name || "";
 
-    const fetchAllEmployeesResponse = await fetchAllEmployees(employee_name_query, position_query, location_query);
-    if (!fetchAllEmployeesResponse.success) {
-      console.error("Error fetching sales data:", fetchAllEmployeesResponse.message);
+    const fetchBrandsResponse = await fetchBrands(brand_name_query);
+    if (!fetchBrandsResponse.success) {
+      console.error("Error fetching brands:", fetchBrandsResponse.message);
       return;
     }
-    return fetchAllEmployeesResponse.employees;
+    return fetchBrandsResponse.brands;
+
   }
+
+
 
   useEffect(() => {
     const fetchData = debounce(async () => {
-      const employeesDdad = await fetchEmployeesWrapper(
-        selectedEmployeeName,
-        selectedPosition,
-        selectedLocation
-      );
+      const brandDdad = await fetchBrandsWrapper(selectedBrandName);
+      console.log("Brand Data: ", brandDdad);
 
-      setEmployeeData(employeesDdad);
+      setBrandData(brandDdad);
+      
     }, 400);
   
     fetchData();
   
     return () => fetchData.cancel(); 
   }, [
-    selectedEmployeeName, selectedPosition, selectedPosition
+    selectedBrandName
   ]);
 
-  const deleteEmployeeWrapper = async (employee_ID) => {
-    console.log("Deleted employee! ID= ", employee_ID);
-    
-    const deleteEmployeeResponse = await deleteEmployee(employee_ID);
-    if (!deleteEmployeeResponse.success) {
-      console.error("Error deleting employee:", deleteEmployeeResponse.message);
+
+  const deleteBrandWrapper = async (brand_name) => {
+    console.log("Deleted brand! ", brand_name);
+
+    const deleteBrandResponse = await deleteBrand(brand_name);
+    if (!deleteBrandResponse.success) {
+      console.error("Error deleting brand:", deleteBrandResponse.message);
       return;
     }
 
-    toast.success("Employee deleted successfully!");
-
-    const employeesDdad = await fetchEmployeesWrapper(
-      selectedEmployeeName,
-      selectedPosition,
-      selectedLocation
-    );
-    setEmployeeData(employeesDdad);
+    toast.success("Brand deleted successfully!");
+    
+    const brandDdad = await fetchBrandsWrapper(selectedBrandName);
+    setBrandData(brandDdad);
   }
   
 
@@ -145,28 +139,14 @@ export default function EmployeePage() {
 
   const columns = [
     {
-      accessorKey: "employee_ID",
-      header: "Employee ID",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("employee_ID")}</div>,
+      accessorKey: "brand_name",
+      header: "Brand name",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("brand_name")}</div>,
     },
     {
-      accessorKey: "employee_name",
-      header: "Employee Name",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("employee_name")}</div>,
-    },
-    {
-      accessorKey: "position",
-      header: "Employee Position",
-      cell: ({ row }) => {
-        const positionKey = row.getValue("position");
-        const position = positions.find((p) => p[0] === positionKey); 
-        return <div className="capitalize">{position ? position[1] : "Unknown"}</div>;
-      },
-    },
-    {
-      accessorKey: "facility_location",
-      header: "Place of work",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("facility_location")}</div>,
+      accessorKey: "contact_info",
+      header: "Contact info",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("contact_info")}</div>,
     },
     {
       id: "actions",
@@ -185,12 +165,12 @@ export default function EmployeePage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the employee from the servers.
+                  This action cannot be undone. This will permanently delete the brand from the servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction className="bg-red-500" onClick={() => deleteEmployeeWrapper(row.original.employee_ID)}>Delete</AlertDialogAction>
+                <AlertDialogAction className="bg-red-500" onClick={() => deleteBrandWrapper(row.original.brand_name)}>Delete</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -205,7 +185,7 @@ export default function EmployeePage() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: employeeData,
+    data: brandData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -239,35 +219,10 @@ export default function EmployeePage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
+                <Label htmlFor="brandName" className="text-right">
                   Name
                 </Label>
-                <Input id="name" value={selectedEmployeeName} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedEmployeeName(e.target.value)}/>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Location
-                </Label>
-                <Input id="location" value={selectedLocation} className="col-span-3" onChange={(e) => setSelectedLocation(e.target.value)} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Position
-                </Label>
-                <Select onValueChange={setSelectedPosition} value={selectedPosition}>
-                  <SelectTrigger className="col-span-3 w-full">
-                    <SelectValue placeholder="Select position" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {
-                      positions.map((position) => (
-                        <SelectItem key={position[0]} value={position[0]}>
-                          {position[1]}
-                        </SelectItem>
-                      ))
-                    }
-                  </SelectContent>
-                </Select>
+                <Input id="brandName" value={selectedBrandName} placeholder="Brand Name" className="col-span-3" onChange={(e) => setSelectedBrandName(e.target.value)} />
               </div>
               
             </div>

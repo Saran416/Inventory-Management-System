@@ -1,8 +1,9 @@
 'use client'
 import { useEffect, useState } from "react";
 
-import { fetchAllEmployees } from "@/api/employee-call";
-import { deleteEmployee } from "@/api/employee-call";
+import { fetchFacilities } from "@/api/facility-calls";
+
+import { deleteFacility } from "@/api/facility-calls";
 
 import { debounce } from "lodash";
 
@@ -69,75 +70,76 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 
 
-const positions = [
-  ["admin", "Admin"],
-  ["auditor", "Auditor"],
-  ["warehouse_manager", "Warehouse Manager"],
-  ["warehouse_employee", "Warehouse Employee"],
-  ["store_manager", "Store Manager"],
-  ["store_employee", "Store Employee"],
+const facility_types = [
   ["all", "All"],
+  ["store", "Store"],
+  ["warehouse", "Warehouse"],
 ];
 
 
 
 
-export default function EmployeePage() {
+export default function FacilityPage() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedEmployeeName, setSelectedEmployeeName] = useState("");
 
-  const [employeeData, setEmployeeData] = useState([]);
+  const [selectedFacilityType, setSelectedFacilityType] = useState("all");
+  const [selectedFacilityLocation, setSelectedFacilityLocation] = useState("");
+  const [facilityData, setFacilityData] = useState([]);
 
-  const fetchEmployeesWrapper = async (employee_name, position, location) => {
-    let employee_name_query = employee_name || "";
-    let position_query = (position === "all") ? "" : position;
-    position_query = position_query || "";
+  const fetchFacilitiesWrapper = async (facility_type, location) => {
+    let facility_type_query = (facility_type === "all") ? "" : facility_type;
     let location_query = location || "";
 
-    const fetchAllEmployeesResponse = await fetchAllEmployees(employee_name_query, position_query, location_query);
-    if (!fetchAllEmployeesResponse.success) {
-      console.error("Error fetching sales data:", fetchAllEmployeesResponse.message);
+    const fetchAllFacilitiesResponse = await fetchFacilities(facility_type_query, location_query);
+    if (!fetchAllFacilitiesResponse.success) {
+      console.error("Error fetching sales data:", fetchAllFacilitiesResponse.message);
       return;
     }
-    return fetchAllEmployeesResponse.employees;
+    return fetchAllFacilitiesResponse.facilities;
   }
+
+
 
   useEffect(() => {
     const fetchData = debounce(async () => {
-      const employeesDdad = await fetchEmployeesWrapper(
-        selectedEmployeeName,
-        selectedPosition,
-        selectedLocation
-      );
 
-      setEmployeeData(employeesDdad);
+
+      const facilityDdad = await fetchFacilitiesWrapper(
+        selectedFacilityType,
+        selectedFacilityLocation
+      );
+      console.log("Facility Data: ", facilityDdad);
+
+      setFacilityData(facilityDdad);
     }, 400);
   
     fetchData();
   
     return () => fetchData.cancel(); 
   }, [
-    selectedEmployeeName, selectedPosition, selectedPosition
+    selectedFacilityType, selectedFacilityLocation
   ]);
 
-  const deleteEmployeeWrapper = async (employee_ID) => {
-    console.log("Deleted employee! ID= ", employee_ID);
+
+  const deleteFaciltyWrapper = async (facility_ID) => {
+    console.log("Deleted facility! ", facility_ID);
     
-    const deleteEmployeeResponse = await deleteEmployee(employee_ID);
-    if (!deleteEmployeeResponse.success) {
-      console.error("Error deleting employee:", deleteEmployeeResponse.message);
+    const deleteFacilityResponse = await deleteFacility(facility_ID);
+    if (!deleteFacilityResponse.success) {
+      console.error("Error deleting facility:", deleteFacilityResponse.message);
       return;
     }
 
-    toast.success("Employee deleted successfully!");
-
-    const employeesDdad = await fetchEmployeesWrapper(
-      selectedEmployeeName,
-      selectedPosition,
-      selectedLocation
+    toast.success("Facility deleted successfully!");
+    
+    const facilityDdad = await fetchFacilitiesWrapper(
+      selectedFacilityType,
+      selectedFacilityLocation
     );
-    setEmployeeData(employeesDdad);
+
+    setFacilityData(facilityDdad);
   }
   
 
@@ -145,28 +147,24 @@ export default function EmployeePage() {
 
   const columns = [
     {
-      accessorKey: "employee_ID",
-      header: "Employee ID",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("employee_ID")}</div>,
+      accessorKey: "facility_ID",
+      header: "Facility ID",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("facility_ID")}</div>,
     },
     {
-      accessorKey: "employee_name",
-      header: "Employee Name",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("employee_name")}</div>,
+      accessorKey: "type",
+      header: "Facility Type",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
     },
     {
-      accessorKey: "position",
-      header: "Employee Position",
-      cell: ({ row }) => {
-        const positionKey = row.getValue("position");
-        const position = positions.find((p) => p[0] === positionKey); 
-        return <div className="capitalize">{position ? position[1] : "Unknown"}</div>;
-      },
+      accessorKey: "location",
+      header: "Facility Location",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("location")}</div>,
     },
     {
-      accessorKey: "facility_location",
-      header: "Place of work",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("facility_location")}</div>,
+      accessorKey: "coordinates",
+      header: "Facility Coordinates",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("coordinates")}</div>,
     },
     {
       id: "actions",
@@ -185,12 +183,12 @@ export default function EmployeePage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the employee from the servers.
+                  This action cannot be undone. This will permanently delete the facility from the servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction className="bg-red-500" onClick={() => deleteEmployeeWrapper(row.original.employee_ID)}>Delete</AlertDialogAction>
+                <AlertDialogAction className="bg-red-500" onClick={() => deleteFaciltyWrapper(row.original.facility_ID)}>Delete</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -205,7 +203,7 @@ export default function EmployeePage() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: employeeData,
+    data: facilityData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -240,34 +238,28 @@ export default function EmployeePage() {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="location" className="text-right">
-                  Name
+                  Type
                 </Label>
-                <Input id="name" value={selectedEmployeeName} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedEmployeeName(e.target.value)}/>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Location
-                </Label>
-                <Input id="location" value={selectedLocation} className="col-span-3" onChange={(e) => setSelectedLocation(e.target.value)} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Position
-                </Label>
-                <Select onValueChange={setSelectedPosition} value={selectedPosition}>
+                <Select onValueChange={setSelectedFacilityType} value={selectedFacilityType}>
                   <SelectTrigger className="col-span-3 w-full">
                     <SelectValue placeholder="Select position" />
                   </SelectTrigger>
                   <SelectContent>
                     {
-                      positions.map((position) => (
-                        <SelectItem key={position[0]} value={position[0]}>
-                          {position[1]}
+                      facility_types.map((facility_type) => (
+                        <SelectItem key={facility_type[0]} value={facility_type[0]}>
+                          {facility_type[1]}
                         </SelectItem>
                       ))
                     }
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="location" className="text-right">
+                  Location
+                </Label>
+                <Input id="location" value={selectedFacilityLocation} className="col-span-3" onChange={(e) => setSelectedFacilityLocation(e.target.value)} />
               </div>
               
             </div>

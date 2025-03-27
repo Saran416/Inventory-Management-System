@@ -163,7 +163,6 @@ export default function AddEmployeePage() {
       <form onSubmit={handleAddEmployee} className='w-[50%] pt-10'>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
-            {/* <Label htmlFor="username">Username</Label> */}
             <Input
               id="username"
               type="text"
@@ -175,9 +174,6 @@ export default function AddEmployeePage() {
           </div>
 
           <div className="grid gap-2">
-            <div className="flex items-center">
-              {/* <Label htmlFor="password">Position</Label> */}
-            </div>
             <Select onValueChange={setPosition} value={position}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select position" />
@@ -242,9 +238,6 @@ export default function AddEmployeePage() {
 
 
           <div className="grid gap-2">
-            <div className="flex items-center">
-              {/* <Label htmlFor="password">Password</Label> */}
-            </div>
             <Input 
               id="password" 
               type="password" 

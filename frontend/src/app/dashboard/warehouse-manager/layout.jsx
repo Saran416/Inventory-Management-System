@@ -14,7 +14,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function DashBoardLayout({ children }) {
   return (
-    <ProtectedRoute position={"warehouse-manager"}>
+    <ProtectedRoute position={"warehouse_manager"}>
       <SidebarProvider className="flex flex-col">
         <div className="[--header-height:calc(theme(spacing.14))]">
           <SiteHeader/>

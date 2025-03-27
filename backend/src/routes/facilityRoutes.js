@@ -1,15 +1,19 @@
 const express = require("express");
 const {
-    getAllFacilities,
-    getWarehouseLocations,
-    getStoreLocations,
+  getFacilities,
+  getWarehouseLocations,
+  getStoreLocations,
+  addFacility,
+  deleteFacility,
 } = require("../controllers/facilityController");
 
 const router = express.Router();
 
 
-router.get("/fetch-all-facilities", getAllFacilities);
+router.get("/fetch-facilities", getFacilities);
 router.get("/fetch-warehouse-locations", getWarehouseLocations);
 router.get("/fetch-store-locations", getStoreLocations);
+router.post("/add-facility", addFacility);
+router.delete("/delete-facility", deleteFacility);
 
 module.exports = router;

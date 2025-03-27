@@ -1,14 +1,15 @@
 const express = require("express");
 const { 
-    getEmployeePosition, 
-    getAllEmployees,
-    employeeExists, 
-    addAdmin, 
-    addAuditor, 
-    addWarehouseManager, 
-    addWarehouseEmployee, 
-    addStoreManager, 
-    addStoreEmployee 
+  getEmployeePosition, 
+  getAllEmployees,
+  employeeExists, 
+  addAdmin, 
+  addAuditor, 
+  addWarehouseManager, 
+  addWarehouseEmployee, 
+  addStoreManager, 
+  addStoreEmployee,
+  deleteEmployee,
 } = require("../controllers/employeeController");
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.post("/add-warehouse-manager", addWarehouseManager);
 router.post("/add-warehouse-employee", addWarehouseEmployee);
 router.post("/add-store-manager", addStoreManager);
 router.post("/add-store-employee", addStoreEmployee);
+router.delete("/delete-employee", deleteEmployee);
 
 
 
