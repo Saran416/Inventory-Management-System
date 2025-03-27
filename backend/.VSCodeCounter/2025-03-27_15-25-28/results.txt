@@ -1,0 +1,50 @@
+Date : 2025-03-27 15:25:28
+Directory : /home/vis/Desktop/dbms_project/backend/src
+Total : 20 files,  719 codes, 42 comments, 207 blanks, all 968 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         20 |        719 |         42 |        207 |        968 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                         | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                            |         20 |        719 |         42 |        207 |        968 |
+| . (Files)                                                                    |          1 |         23 |          0 |          5 |         28 |
+| config                                                                       |          1 |         23 |          0 |          5 |         28 |
+| controllers                                                                  |          8 |        576 |         41 |        158 |        775 |
+| middlewares                                                                  |          1 |          9 |          0 |          3 |         12 |
+| models                                                                       |          1 |          0 |          0 |          1 |          1 |
+| routes                                                                       |          8 |         88 |          1 |         35 |        124 |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                     | language   | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| /home/vis/Desktop/dbms_project/backend/src/config/db.js                      | JavaScript |         23 |          0 |          5 |         28 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/authController.js     | JavaScript |         27 |          0 |          9 |         36 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/brandController.js    | JavaScript |         49 |         13 |         13 |         75 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/customerController.js | JavaScript |         26 |          0 |         11 |         37 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/employeeController.js | JavaScript |        289 |          1 |         78 |        368 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/facilityController.js | JavaScript |         83 |         12 |         14 |        109 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/productController.js  | JavaScript |         11 |          1 |          6 |         18 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/salesController.js    | JavaScript |         54 |          7 |         15 |         76 |
+| /home/vis/Desktop/dbms_project/backend/src/controllers/stockController.js    | JavaScript |         37 |          7 |         12 |         56 |
+| /home/vis/Desktop/dbms_project/backend/src/middlewares/corsMiddleware.js     | JavaScript |          9 |          0 |          3 |         12 |
+| /home/vis/Desktop/dbms_project/backend/src/models/users.js                   | JavaScript |          0 |          0 |          1 |          1 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/authRoutes.js              | JavaScript |          5 |          0 |          5 |         10 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/brandRoutes.js             | JavaScript |         11 |          0 |          4 |         15 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/customerRoutes.js          | JavaScript |          7 |          0 |          4 |         11 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/employeeRoutes.js          | JavaScript |         25 |          1 |          6 |         32 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/facilityRoutes.js          | JavaScript |         15 |          0 |          4 |         19 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/productRoutes.js           | JavaScript |         11 |          0 |          4 |         15 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/salesRoutes.js             | JavaScript |          7 |          0 |          4 |         11 |
+| /home/vis/Desktop/dbms_project/backend/src/routes/stockRoutes.js             | JavaScript |          7 |          0 |          4 |         11 |
+| /home/vis/Desktop/dbms_project/backend/src/server.js                         | JavaScript |         23 |          0 |          5 |         28 |
+| Total                                                                        |            |        719 |         42 |        207 |        968 |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

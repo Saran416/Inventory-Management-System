@@ -61,7 +61,7 @@ export default function AddFacilityPage() {
         <div className="flex flex-col gap-6">
 
           <div className="grid gap-2">
-            <Select onValueChange={setFacilityType} value={facilityType}>
+            <Select onValueChange={setFacilityType} value={facilityType} required>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
@@ -77,10 +77,6 @@ export default function AddFacilityPage() {
             </Select>
           </div>
 
-          
-
-
-
           <div className="grid gap-2">
             <Input 
               id="facilityLocation" 
@@ -90,7 +86,6 @@ export default function AddFacilityPage() {
               onChange={(e) => setFacilityLocation(e.target.value)} 
               required 
             />
-
           </div>
 
           <div className="grid gap-2">
@@ -102,7 +97,6 @@ export default function AddFacilityPage() {
               onChange={(e) => setFacilityCoordinates(e.target.value)} 
               required 
             />
-
           </div>
           
           <Button type="submit" className="w-full">

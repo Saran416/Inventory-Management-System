@@ -22,6 +22,27 @@ export async function fetchFacilities(facility_type_query, location_query) {
       message: "Network error: Unable to connect to the server.",
     };
 
+  };
+};
+
+export async function fetchFacilityFromID(facility_ID) {
+  try {
+    const response = await fetch(`${API_URL}/facility/fetch-facility-from-id?facility_ID=${encodeURIComponent(facility_ID)}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return { success: false, message: responseData.message || "Failed to fetch facility" };
+    }
+    return responseData;
+  } catch (error) {
+    console.error("Error fetching facility:", error);
+    return { 
+      success: false, 
+      message: "Network error: Unable to connect to the server.",
+    };
   }
 }
 
@@ -41,9 +62,8 @@ export async function fetchWarehouseLocations() {
       success: false, 
       message: "Network error: Unable to connect to the server.",
     };
-  }
-}
-
+  };
+};
 
 export async function fetchStoreLocations() {
   try {

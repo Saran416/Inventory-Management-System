@@ -4,6 +4,10 @@ export function generateSidebarData(employee_name, position) {
   if (position === "admin") {
     return {
       user: { name: employee_name, position },
+      navTop: [
+        { title: "Dashboard", url: "/dashboard/admin", icon: SquareTerminal },
+      ],
+      
       navMain: [
         {
           title: "Employee",
@@ -57,66 +61,278 @@ export function generateSidebarData(employee_name, position) {
   } else if (position === "auditor") {
     return {
       user: { name: employee_name, position },
+      navTop: [
+        { title: "Dashboard", url: "/dashboard/auditor", icon: SquareTerminal },
+      ],
+      
       navMain: [
         {
-          title: "Playground",
+          title: "Facility",
           url: "#",
-          icon: SquareTerminal,
-          isActive: true,
+          icon: Store,
+          isActive: false,
           items: [
-            { title: "Dashboard", url: "/dashboard/admin" },
-            { title: "Inner", url: "/dashboard/inner" },
-            { title: "Settings", url: "#" },
+            { title: "View/Delete facility", url: "/dashboard/admin/facility" },
+            { title: "Add facility", url: "/dashboard/admin/add-facility" },
           ],
         },
         {
-          title: "Models",
+          title: "Brands",
           url: "#",
-          icon: Bot,
+          icon: FolderKanban,
+          isActive: false,
           items: [
-            { title: "Genesis", url: "#" },
-            { title: "Explorer", url: "#" },
-            { title: "Quantum", url: "#" },
+            { title: "View/Delete brand", url: "/dashboard/admin/brand" },
+            { title: "Add brand", url: "/dashboard/admin/add-brand" },
           ],
         },
         {
-          title: "Documentation",
+          title: "Products",
           url: "#",
-          icon: BookOpen,
+          icon: FolderKanban,
+          isActive: false,
           items: [
-            { title: "Introduction", url: "dashboard" },
-            { title: "Get Started", url: "#" },
-            { title: "Tutorials", url: "#" },
-            { title: "Changelog", url: "#" },
-          ],
-        },
-        {
-          title: "Settings",
-          url: "#",
-          icon: Settings2,
-          items: [
-            { title: "General", url: "#" },
-            { title: "Team", url: "#" },
-            { title: "Billing", url: "#" },
-            { title: "Limits", url: "#" },
+            { title: "View/Delete product", url: "/dashboard/admin/product" },
+            { title: "Add product", url: "/dashboard/admin/add-product" },
           ],
         },
       ],
       utilities: [
-        // { title: "Add employee", url: "/dashboard/admin/add-employee" },
-        // { title: "Feedback", url: "#" },
-        // { title: "Settings", url: "#" },
-      ],
-      projects: [
-        { name: "Add employee", url: "/dashboard/admin/add-employee", icon: Frame },
-        { name: "Sales & Marketing", url: "#", icon: PieChart },
-        { name: "Travel", url: "#", icon: Map },
+        { title: "Customers", url: "/dashboard/admin/customers" },
+        { title: "Stock", url: "/dashboard/admin/stock" },
+        { title: "Sales", url: "/dashboard/admin/sales" },
+        { title: "Inventory transactions", url: "/dashboard/admin/inventory-transactions" },
+        { title: "Factory orders", url: "/dashboard/admin/factory-orders" },
       ],
     };
   } else if (position === "warehouse-manager") {
+    return {
+      user: { name: employee_name, position },
+      navTop: [
+        { title: "Dashboard", url: "/dashboard/warehouse-manager", icon: SquareTerminal },
+      ],
+      
+      navMain: [
+        {
+          title: "Employee",
+          url: "#",
+          icon: Users,
+          isActive: false,
+          items: [
+            { title: "View/Delete employee", url: "/dashboard/admin/employee" },
+            { title: "Add employee", url: "/dashboard/admin/add-employee" },
+          ],
+        },
+        {
+          title: "Facility",
+          url: "#",
+          icon: Store,
+          isActive: false,
+          items: [
+            { title: "View/Delete facility", url: "/dashboard/admin/facility" },
+            { title: "Add facility", url: "/dashboard/admin/add-facility" },
+          ],
+        },
+        {
+          title: "Brands",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete brand", url: "/dashboard/admin/brand" },
+            { title: "Add brand", url: "/dashboard/admin/add-brand" },
+          ],
+        },
+        {
+          title: "Products",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete product", url: "/dashboard/admin/product" },
+            { title: "Add product", url: "/dashboard/admin/add-product" },
+          ],
+        },
+      ],
+      utilities: [
+        { title: "Customers", url: "/dashboard/admin/customers" },
+        { title: "Stock", url: "/dashboard/admin/stock" },
+        { title: "Sales", url: "/dashboard/admin/sales" },
+        { title: "Inventory transactions", url: "/dashboard/admin/inventory-transactions" },
+        { title: "Factory orders", url: "/dashboard/admin/factory-orders" },
+      ],
+    };
   } else if (position === "warehouse-employee") {
+    return {
+      user: { name: employee_name, position },
+      navTop: [
+        { title: "Dashboard", url: "/dashboard/warehouse-employee", icon: SquareTerminal },
+      ],
+      
+      navMain: [
+        {
+          title: "Employee",
+          url: "#",
+          icon: Users,
+          isActive: false,
+          items: [
+            { title: "View/Delete employee", url: "/dashboard/admin/employee" },
+            { title: "Add employee", url: "/dashboard/admin/add-employee" },
+          ],
+        },
+        {
+          title: "Facility",
+          url: "#",
+          icon: Store,
+          isActive: false,
+          items: [
+            { title: "View/Delete facility", url: "/dashboard/admin/facility" },
+            { title: "Add facility", url: "/dashboard/admin/add-facility" },
+          ],
+        },
+        {
+          title: "Brands",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete brand", url: "/dashboard/admin/brand" },
+            { title: "Add brand", url: "/dashboard/admin/add-brand" },
+          ],
+        },
+        {
+          title: "Products",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete product", url: "/dashboard/admin/product" },
+            { title: "Add product", url: "/dashboard/admin/add-product" },
+          ],
+        },
+      ],
+      utilities: [
+        { title: "Customers", url: "/dashboard/admin/customers" },
+        { title: "Stock", url: "/dashboard/admin/stock" },
+        { title: "Sales", url: "/dashboard/admin/sales" },
+        { title: "Inventory transactions", url: "/dashboard/admin/inventory-transactions" },
+        { title: "Factory orders", url: "/dashboard/admin/factory-orders" },
+      ],
+    };
   } else if (position === "store-manager") {
+    return {
+      user: { name: employee_name, position },
+      navTop: [
+        { title: "Dashboard", url: "/dashboard/store-manager", icon: SquareTerminal },
+      ],
+      
+      navMain: [
+        {
+          title: "Employee",
+          url: "#",
+          icon: Users,
+          isActive: false,
+          items: [
+            { title: "View/Delete employee", url: "/dashboard/admin/employee" },
+            { title: "Add employee", url: "/dashboard/admin/add-employee" },
+          ],
+        },
+        {
+          title: "Facility",
+          url: "#",
+          icon: Store,
+          isActive: false,
+          items: [
+            { title: "View/Delete facility", url: "/dashboard/admin/facility" },
+            { title: "Add facility", url: "/dashboard/admin/add-facility" },
+          ],
+        },
+        {
+          title: "Brands",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete brand", url: "/dashboard/admin/brand" },
+            { title: "Add brand", url: "/dashboard/admin/add-brand" },
+          ],
+        },
+        {
+          title: "Products",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete product", url: "/dashboard/admin/product" },
+            { title: "Add product", url: "/dashboard/admin/add-product" },
+          ],
+        },
+      ],
+      utilities: [
+        { title: "Customers", url: "/dashboard/admin/customers" },
+        { title: "Stock", url: "/dashboard/admin/stock" },
+        { title: "Sales", url: "/dashboard/admin/sales" },
+        { title: "Inventory transactions", url: "/dashboard/admin/inventory-transactions" },
+        { title: "Factory orders", url: "/dashboard/admin/factory-orders" },
+      ],
+    };
   } else if (position === "store-employee") {
+    return {
+      user: { name: employee_name, position },
+      navTop: [
+        { title: "Dashboard", url: "/dashboard/store-employee", icon: SquareTerminal },
+      ],
+      
+      navMain: [
+        {
+          title: "Employee",
+          url: "#",
+          icon: Users,
+          isActive: false,
+          items: [
+            { title: "View/Delete employee", url: "/dashboard/admin/employee" },
+            { title: "Add employee", url: "/dashboard/admin/add-employee" },
+          ],
+        },
+        {
+          title: "Facility",
+          url: "#",
+          icon: Store,
+          isActive: false,
+          items: [
+            { title: "View/Delete facility", url: "/dashboard/admin/facility" },
+            { title: "Add facility", url: "/dashboard/admin/add-facility" },
+          ],
+        },
+        {
+          title: "Brands",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete brand", url: "/dashboard/admin/brand" },
+            { title: "Add brand", url: "/dashboard/admin/add-brand" },
+          ],
+        },
+        {
+          title: "Products",
+          url: "#",
+          icon: FolderKanban,
+          isActive: false,
+          items: [
+            { title: "View/Delete product", url: "/dashboard/admin/product" },
+            { title: "Add product", url: "/dashboard/admin/add-product" },
+          ],
+        },
+      ],
+      utilities: [
+        { title: "Customers", url: "/dashboard/admin/customers" },
+        { title: "Stock", url: "/dashboard/admin/stock" },
+        { title: "Sales", url: "/dashboard/admin/sales" },
+        { title: "Inventory transactions", url: "/dashboard/admin/inventory-transactions" },
+        { title: "Factory orders", url: "/dashboard/admin/factory-orders" },
+      ],
+    };
   }
   return {};
 }

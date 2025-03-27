@@ -48,10 +48,8 @@ return (
     collapsible="icon"
     {...props}
   >
-    {/* <SidebarHeader>
-     <TeamSwitcher teams={data.teams}/>
-   </SidebarHeader> */}
     <SidebarContent>
+      {sidebarData.navTop && <NavUtilities utilities={sidebarData.navTop} />}
       {sidebarData.navMain && <NavMain items={sidebarData.navMain} />}
       {/* {sidebarData.projects && <NavProjects projects={sidebarData.projects} />} */}
       {sidebarData.utilities && <NavUtilities utilities={sidebarData.utilities} />}

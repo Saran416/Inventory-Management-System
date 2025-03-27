@@ -80,10 +80,6 @@ const facility_types = [
 
 
 export default function FacilityPage() {
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedPosition, setSelectedPosition] = useState("");
-  const [selectedEmployeeName, setSelectedEmployeeName] = useState("");
-
   const [selectedFacilityType, setSelectedFacilityType] = useState("all");
   const [selectedFacilityLocation, setSelectedFacilityLocation] = useState("");
   const [facilityData, setFacilityData] = useState([]);

@@ -80,7 +80,7 @@ const facility_types = [
 
 
 
-export default function FacilityPage() {
+export default function BrandPage() {
   const [selectedFacilityType, setSelectedFacilityType] = useState("all");
   const [selectedFacilityLocation, setSelectedFacilityLocation] = useState("");
 

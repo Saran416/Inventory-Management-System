@@ -366,3 +366,28 @@ exports.deleteEmployee = async (req, res) => {
   res.json({ success: true, message: "Employee deleted successfully." });
   
 }
+
+exports.getWorksIn = async (req, res) => {
+  const { employee_name } = req.query;
+
+  try {
+    const [rows] = await pool.query(
+      "SELECT works_in FROM employee WHERE employee_name = ?",
+      [employee_name]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    const works_in = rows[0].works_in;
+
+    res.json({ success: true, works_in });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}

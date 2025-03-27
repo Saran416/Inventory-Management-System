@@ -10,6 +10,7 @@ const {
   addStoreManager, 
   addStoreEmployee,
   deleteEmployee,
+  getWorksIn,
 } = require("../controllers/employeeController");
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post("/add-warehouse-employee", addWarehouseEmployee);
 router.post("/add-store-manager", addStoreManager);
 router.post("/add-store-employee", addStoreEmployee);
 router.delete("/delete-employee", deleteEmployee);
+router.get("/get-works-in", getWorksIn);
 
 
 
