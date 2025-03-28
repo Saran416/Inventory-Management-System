@@ -96,8 +96,7 @@ CREATE TABLE alerts (
     alert_ID SERIAL PRIMARY KEY,
     triggerd_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     facility_ID BIGINT UNSIGNED REFERENCES facility(facility_ID) ON DELETE CASCADE,
-    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE,
-    acknowledged BOOLEAN NOT NULL DEFAULT FALSE
+    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE
 );
 
 -- Adding Constraints
