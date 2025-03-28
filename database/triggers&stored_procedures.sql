@@ -91,7 +91,8 @@ CREATE PROCEDURE MarkTransactionAsAccepted(
 BEGIN
     -- Update the inventory transaction to mark it as accepted
     UPDATE inventory_transactions
-    SET processed = 1
+    SET processed = "accepted"
     WHERE transaction_ID = transaction_ID;
+
 END $$
 DELIMITER ;
