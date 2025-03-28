@@ -15,12 +15,15 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useSidebar } from "@/components/ui/sidebar"
 
+import { useAuth } from '@/context/AuthContext';
+
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar()
+  const { logout } = useAuth();
 
   return (
     <header className='flex fixed z-40 border-b bg-background w-full justify-between pr-5 h-[--header-height] shrink-0 items-center gap-2'>
-      <div className='flex items-center h-(--header-height) gap-2 px-4'>
+      <div className='flex items-center justify-between h-(--header-height) gap-2 px-4'>
         <Button
           className="h-8 w-8 mr-2"
           variant="ghost"
@@ -29,6 +32,8 @@ export function SiteHeader() {
         >
           <SidebarIcon />
         </Button>
+
+        
         
         {/* <Breadcrumb>
           <BreadcrumbList>
@@ -45,7 +50,7 @@ export function SiteHeader() {
         </Breadcrumb> */}
       </div>
 
-
+      <Button onClick={logout}>Logout</Button>
             
 
     </header>

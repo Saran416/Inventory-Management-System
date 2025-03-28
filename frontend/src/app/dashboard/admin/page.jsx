@@ -10,6 +10,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 import { Button } from '@/components/ui/button';
 
+import { PieChartComponent, AreaChartComponent, BarChartComponent } from "@/components/ChartComponents";
 
 
 function DashBoard() {
@@ -35,8 +36,22 @@ function DashBoard() {
 
   return (
     <>
-      <div>
+      <div className="p-10">
         <h1>Welcome, {user.username}</h1>
+        <div className="flex flex-wrap  pt-10">
+          <div className="w-[30%]">
+            <PieChartComponent />
+
+          </div><div className="w-[30%]">
+            <PieChartComponent />
+
+          </div><div className="w-[30%]">
+            <BarChartComponent />
+
+          </div>
+        </div>
+        <AreaChartComponent />
+        
       </div>
           
     </>
