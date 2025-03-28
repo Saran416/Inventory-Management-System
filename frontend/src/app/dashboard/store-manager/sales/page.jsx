@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 
 import { fetchSales } from "@/api/sales-call";
 
-import { fetchInventoryTransactions } from "@/api/transactions-calls";
+import { fetchSalesByEmployeeID } from "@/api/sales-call";
+
+import { fetchEmployeeID } from "@/api/employee-call";
 
 import { debounce } from "lodash";
 
@@ -63,23 +65,23 @@ import { toast } from "sonner";
 
 export const columns = [
   {
-    accessorKey: "transaction_ID",
+    accessorKey: "sale_ID",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Transaction ID
+        Sales ID
         <ArrowUpDown />
       </Button>
     ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("transaction_ID")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("sale_ID")}</div>,
   },
   {
-    accessorKey: "transaction_time",
-    header: "Transaction time",
+    accessorKey: "sale_time",
+    header: "Time",
     cell: ({ row }) => {
-      const rawDate = row.getValue("transaction_time");
+      const rawDate = row.getValue("sale_time");
       const date = new Date(rawDate);
       const formattedDate = date.toISOString().split("T")[0];
       const formattedTime = date.toLocaleTimeString("en-US", {
@@ -90,30 +92,20 @@ export const columns = [
       return (
         <div className="capitalize">
           {formattedDate} {formattedTime}
-          {/* {row.getValue("transaction_time")} */}
         </div>
       );
     },
+  },
+
+  {
+    accessorKey: "customer_name",
+    header: "Customer name",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("customer_name")}</div>,
   },
   {
     accessorKey: "product_name",
     header: "Product name",
     cell: ({ row }) => <div className="capitalize">{row.getValue("product_name")}</div>,
-  },
-  {
-    accessorKey: "requested_to_location",
-    header: "Requested to location",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_to_location")}</div>,
-  },
-  {
-    accessorKey: "requested_from_location",
-    header: "Requested from location",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_from_location")}</div>,
-  },
-  {
-    accessorKey: "requested_by_employee",
-    header: "Employee name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_by_employee")}</div>,
   },
   {
     accessorKey: "quantity",
@@ -128,46 +120,42 @@ export const columns = [
     ),
     cell: ({ row }) => <div className="capitalize">{row.getValue("quantity")}</div>,
   },
-  {
-    accessorKey: "processed",
-    header: "Status",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
-  },
 ];
 
-export default function InventoryTransactionsPage() {
+export default function SalesPage() {
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
-  const [selectedFromLocation, setSelectedFromLocation] = useState("");
-  const [selectedToLocation, setSelectedToLocation] = useState("");
-  const [selectedByEmployee, setSelectedByEmployee] = useState("");
-  const [selectedSalesman, setSelectedSalesman] = useState("");
-  const [selectedProductName, setSelectedProductName] = useState();
+  const [selectedProductName, setSelectedProductName] = useState([]);
 
 
-  const [inventoryTransactionsData, setinventoryTransactionsData] = useState([]);
+  const [salesData, setSalesData] = useState([]);
+
   
-  const fetchInventoryTransactionsWrapper = async (start_date, end_date, from_location, to_location, product_name) => {
+  
+  const fetchSalesWrapper = async (start_date, end_date, product_name) => {
     let start_date_query = start_date || "";
     let end_date_query = end_date || "";
-    let from_location_query = from_location || "";
-    let to_location_query = to_location || "";
     let product_name_query = product_name || "";
-    
-    const inventoryTransactionsResponse = await fetchInventoryTransactions(
-      start_date_query,
-      end_date_query,
-      from_location_query,
-      to_location_query,
-      product_name_query
-    );
-    if (!inventoryTransactionsResponse.success) {
-      console.error("Error fetching inventory transactions data:", inventoryTransactionsResponse.message);
+
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const employeeIDResponse = await fetchEmployeeID(storedUser.username);
+    if (!employeeIDResponse.success) {
+      toast.error("Error", {
+        description: employeeIDResponse.message,
+      });
       return;
     }
-    return inventoryTransactionsResponse.inventory_transactions;
-  }
+    const employeeID = employeeIDResponse.employee_ID;
+    console.log("Employee ID:", employeeID);
+    const salesResponse = await fetchSalesByEmployeeID(start_date_query, end_date_query, product_name_query, employeeID);
+    
 
+    if (!salesResponse.success) {
+      console.error("Error fetching sales data:", salesResponse.message);
+      return;
+    }
+    return salesResponse.sales;
+  }
 
   const applyFilter = async () => {
 
@@ -179,35 +167,32 @@ export default function InventoryTransactionsPage() {
       return;
     }
 
-    const inventoryTransactionsDdad = await fetchInventoryTransactionsWrapper(
+    const salesDdad = await fetchSalesWrapper(
       selectedStartDate,
       selectedEndDate,
-      selectedFromLocation,
-      selectedToLocation,
       selectedProductName
     );
-    console.log(inventoryTransactionsDdad);
-    setinventoryTransactionsData(inventoryTransactionsDdad);
+    setSalesData(salesDdad);
   }
 
   useEffect(() => {
     const fetchData = debounce(async () => {
-      const inventoryTransactionsDdad = await fetchInventoryTransactionsWrapper(
+      const salesDdad = await fetchSalesWrapper(
         selectedStartDate,
         selectedEndDate,
-        selectedFromLocation,
-        selectedToLocation,
         selectedProductName
       );
-      // console.log(inventoryTransactionsDdad);
-      setinventoryTransactionsData(inventoryTransactionsDdad);
-
-    }, 300);
+  
+      // console.log("salesDdad", salesDdad);
+      setSalesData(salesDdad);
+    }, 300); // 300ms delay to prevent excessive API calls
   
     fetchData();
   
-    return () => fetchData.cancel();
-  }, [ ]);
+    return () => fetchData.cancel(); // Cleanup on unmount
+  }, [
+    // selectedStartDate, selectedEndDate, selectedLocation, selectedSalesman, selectedProductName
+  ]);
   
 
 
@@ -217,7 +202,7 @@ export default function InventoryTransactionsPage() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: inventoryTransactionsData,
+    data: salesData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -269,18 +254,6 @@ export default function InventoryTransactionsPage() {
                   End Date
                 </Label>
                 <Input id="selectedEndDate" value={selectedEndDate} placeholder="YYYY-MM-DD" onChange={(e) => setSelectedEndDate(e.target.value)}  className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Location
-                </Label>
-                <Input id="location" value={selectedFromLocation} placeholder="Requested from" className="col-span-3" onChange={(e) => setSelectedFromLocation(e.target.value)} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Location
-                </Label>
-                <Input id="location" value={selectedToLocation} placeholder="Requested to" className="col-span-3" onChange={(e) => setSelectedToLocation(e.target.value)} />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="location" className="text-right">

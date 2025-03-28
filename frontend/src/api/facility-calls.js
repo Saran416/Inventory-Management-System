@@ -46,6 +46,25 @@ export async function fetchFacilityFromID(facility_ID) {
   }
 }
 
+export async function fetchWarehouses() {
+  try {
+    const response = await fetch(`${API_URL}/facility/fetch-warehouses`, {
+      method: "GET",
+    });
+    const responseData = await response.json();
+    if (!response.ok) {
+      return { success: false, message: responseData.message || "Failed to fetch warehouses" };
+    }
+    return responseData;
+  } catch (error) {
+    console.error("Error fetching warehouses:", error);
+    return { 
+      success: false, 
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+}
+
 export async function fetchWarehouseLocations() {
   try {
     const response = await fetch(`${API_URL}/facility/fetch-warehouse-locations`, {

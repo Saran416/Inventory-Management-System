@@ -60,6 +60,5 @@ async function insertEmployees() {
 insertEmployees();
 
 
-console.log("fdsf")
 bcrypt.hash("admin1pass", 10).then(console.log);
 

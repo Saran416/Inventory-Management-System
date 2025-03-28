@@ -55,11 +55,12 @@ exports.getInventoryTransactions = async (req, res) => {
       queryParams.push(`%${product_name}%`);
     }
 
-    conditions.push(`it.processed = 1`); // Only show processed transactions
+    conditions.push(`it.processed = 1 or it.processed = 2 or it.processed = 3`); // Only show processed transactions
 
     if (conditions.length > 0) {
       query += ` WHERE ` + conditions.join(" AND ");
     }
+
 
     const [result] = await pool.query(query, queryParams);
 
@@ -74,11 +75,11 @@ exports.getInventoryTransactions = async (req, res) => {
 };
   
 exports.getInventoryTransactionsByManagerID = async (req, res) => {
-  const { manager_id,
+  const { manager_ID,
     start_date, 
     end_date, 
     from_location, 
-    product_name } = req.params;
+    product_name } = req.query;
 
   try {
     let query = `
@@ -99,7 +100,7 @@ exports.getInventoryTransactionsByManagerID = async (req, res) => {
     `;
 
     let conditions = [];
-    let queryParams = [manager_id];
+    let queryParams = [manager_ID];
 
     if (start_date) {
       conditions.push(`it.Time >= ?`);
@@ -121,8 +122,13 @@ exports.getInventoryTransactionsByManagerID = async (req, res) => {
       queryParams.push(`%${product_name}%`);
     }
 
-    conditions.push(`it.processed = FALSE`); // Only show processed transactions
+    conditions.push(`it.processed = 1 or it.processed = 2 or it.processed = 3`); // Only show processed transactions
 
+    if (conditions.length > 0) {
+      query += ` AND ` + conditions.join(" AND ");
+    }
+
+    const [result] = await pool.query(query, queryParams);
 
     res.json({ success: true, inventory_transactions: result });
   } catch (error) {
@@ -134,7 +140,6 @@ exports.getInventoryTransactionsByManagerID = async (req, res) => {
   }
 }
 
-// TODO: check this
 exports.getFactoryOrders = async (req, res) => {
   const { 
     start_date, 
@@ -199,6 +204,31 @@ exports.getFactoryOrders = async (req, res) => {
 
     res.json({ success: true, factory_orders: result });
   } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
+
+exports.addInventoryTransaction = async (req, res) => {
+  const {
+    warehouse_ID,
+    emp_ID,
+    prod_ID,
+    stock_quantity,
+  } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      `CALL RequestInventoryTransaction(?, ?, ?, ?)`,
+      [warehouse_ID, emp_ID, prod_ID, stock_quantity]
+    );
+
+    res.json({ success: true, message: "Stock request added successfully." });
+  }
+  catch (error) {
     console.error("Database error:", error);
     res.status(500).json({
       success: false,

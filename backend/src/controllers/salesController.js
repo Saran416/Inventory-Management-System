@@ -52,18 +52,12 @@ exports.getSales = async (req, res) => {
     }
 
 
-    // Add conditions to the query if any
     if (conditions.length > 0) {
       query += ` WHERE ` + conditions.join(" AND ");
     }
 
-    // console.log(query);
-    // console.log(queryParams);
-
-    // Execute parameterized query
     const [result] = await pool.query(query, queryParams);
 
-    // console.log(result);
     res.json({ success: true, sales: result });
   } catch (error) {
     console.error("Database error:", error);

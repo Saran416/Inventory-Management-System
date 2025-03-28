@@ -6,6 +6,7 @@ import { fetchSales } from "@/api/sales-call";
 import { fetchInventoryTransactions } from "@/api/transactions-calls";
 
 import { fetchInventoryTransactionsByManagerID } from "@/api/transactions-calls";
+import { fetchEmployeeID } from "@/api/employee-call";
 
 import { debounce } from "lodash";
 
@@ -104,13 +105,8 @@ export const columns = [
   },
   {
     accessorKey: "requested_to_location",
-    header: "Requested to location",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_to_location")}</div>,
-  },
-  {
-    accessorKey: "requested_from_location",
     header: "Requested from location",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_from_location")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_to_location")}</div>,
   },
   {
     accessorKey: "requested_by_employee",
@@ -121,14 +117,19 @@ export const columns = [
     accessorKey: "quantity",
     header: ({ column }) => (
       <Button
-        variant="ghost"
+      variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
+        >
         Quantity
         <ArrowUpDown />
       </Button>
     ),
     cell: ({ row }) => <div className="capitalize">{row.getValue("quantity")}</div>,
+  },
+  {
+    accessorKey: "processed",
+    header: "Status",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
   },
 ];
 
@@ -136,27 +137,33 @@ export default function InventoryTransactionsPage() {
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [selectedFromLocation, setSelectedFromLocation] = useState("");
-  const [selectedToLocation, setSelectedToLocation] = useState("");
-  const [selectedByEmployee, setSelectedByEmployee] = useState("");
-  const [selectedSalesman, setSelectedSalesman] = useState("");
   const [selectedProductName, setSelectedProductName] = useState([]);
 
 
   const [inventoryTransactionsData, setinventoryTransactionsData] = useState([]);
   
-  const fetchInventoryTransactionsWrapper = async (start_date, end_date, from_location, to_location, product_name) => {
+  const fetchInventoryTransactionsWrapper = async (start_date, end_date, from_location, product_name) => {
     let start_date_query = start_date || "";
     let end_date_query = end_date || "";
     let from_location_query = from_location || "";
-    let to_location_query = to_location || "";
     let product_name_query = product_name || "";
+
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+        const employeeIDResponse = await fetchEmployeeID(storedUser.username);
+        if (!employeeIDResponse.success) {
+          toast.error("Error", {
+            description: employeeIDResponse.message,
+          });
+          return;
+        }
+        const manager_ID = employeeIDResponse.employee_ID;
     
-    const inventoryTransactionsResponse = await fetchInventoryTransactions(
+    const inventoryTransactionsResponse = await fetchInventoryTransactionsByManagerID(
       start_date_query,
       end_date_query,
       from_location_query,
-      to_location_query,
-      product_name_query
+      product_name_query,
+      manager_ID
     );
     if (!inventoryTransactionsResponse.success) {
       console.error("Error fetching inventory transactions data:", inventoryTransactionsResponse.message);
@@ -180,7 +187,6 @@ export default function InventoryTransactionsPage() {
       selectedStartDate,
       selectedEndDate,
       selectedFromLocation,
-      selectedToLocation,
       selectedProductName
     );
     console.log(inventoryTransactionsDdad);
@@ -193,9 +199,9 @@ export default function InventoryTransactionsPage() {
         selectedStartDate,
         selectedEndDate,
         selectedFromLocation,
-        selectedToLocation,
         selectedProductName
       );
+      console.log(inventoryTransactionsDdad);
       setinventoryTransactionsData(inventoryTransactionsDdad);
 
     }, 300);
@@ -272,24 +278,7 @@ export default function InventoryTransactionsPage() {
                 </Label>
                 <Input id="location" value={selectedFromLocation} placeholder="Requested from" className="col-span-3" onChange={(e) => setSelectedFromLocation(e.target.value)} />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Location
-                </Label>
-                <Input id="location" value={selectedToLocation} placeholder="Requested to" className="col-span-3" onChange={(e) => setSelectedToLocation(e.target.value)} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Salesman
-                </Label>
-                <Input id="name" value={selectedSalesman} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedSalesman(e.target.value)}/>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Employee
-                </Label>
-                <Input id="name" value={selectedByEmployee} placeholder="Selected by" className="col-span-3" onChange={(e) => setSelectedByEmployee(e.target.value)}/>
-              </div>
+
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="location" className="text-right">
                   Product
