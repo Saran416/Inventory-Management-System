@@ -68,22 +68,23 @@ INSERT INTO facility (type, location, coordinates) VALUES
 ('Store', 'Store 3 - Bengaluru', '415,415');
 
 INSERT INTO employee (employee_name, position, works_in, password) VALUES
-('Admin', 'Admin', NULL, 'adminpass'),
-('Rajesh Kumar', 'Warehouse Manager', 1, 'pass123'),
-('Suresh Gupta', 'Warehouse Manager', 2, 'pass123'),
-('Amit Patel', 'Warehouse Manager', 3, 'pass123'),
-('Karthik Reddy', 'Warehouse Manager', 4, 'pass123'),
-('Neha Sharma', 'Store Manager', 5, 'pass123'),
-('Pooja Verma', 'Store Manager', 6, 'pass123'),
-('Vikram Singh', 'Store Manager', 7, 'pass123'),
-('Rohan Das', 'Store Manager', 8, 'pass123'),
-('Alok Mehta', 'Store Manager', 9, 'pass123'),
-('Sneha Iyer', 'Store Manager', 10, 'pass123'),
-('Manoj Pillai', 'Store Manager', 11, 'pass123'),
-('Deepak Nair', 'Store Manager', 12, 'pass123'),
-('Asha Menon', 'Store Manager', 13, 'pass123'),
-('Rahul Bose', 'Store Manager', 14, 'pass123'),
-('Kiran Rao', 'Store Manager', 15, 'pass123');
+('admin1', 'admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJlItrnBJIphQALN6'),
+('Admin', 'admin', NULL, 'adminpass'),
+('Rajesh Kumar', 'warehouse-manager', 1, 'pass123'),
+('Suresh Gupta', 'warehouse-manager', 2, 'pass123'),
+('Amit Patel', 'warehouse-manager', 3, 'pass123'),
+('Karthik Reddy', 'warehouse-manager', 4, 'pass123'),
+('Neha Sharma', 'store-manager', 5, 'pass123'),
+('Pooja Verma', 'store-manager', 6, 'pass123'),
+('Vikram Singh', 'store-manager', 7, 'pass123'),
+('Rohan Das', 'store-manager', 8, 'pass123'),
+('Alok Mehta', 'store-manager', 9, 'pass123'),
+('Sneha Iyer', 'store-manager', 10, 'pass123'),
+('Manoj Pillai', 'store-manager', 11, 'pass123'),
+('Deepak Nair', 'store-manager', 12, 'pass123'),
+('Asha Menon', 'store-manager', 13, 'pass123'),
+('Rahul Bose', 'store-manager', 14, 'pass123'),
+('Kiran Rao', 'store-manager', 15, 'pass123');
 
 INSERT INTO brand (brand_name, contact_info) VALUES
 ('Nike', 'nike@example.com'),
