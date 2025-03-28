@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 
 import { PieChartComponent, AreaChartComponent, BarChartComponent, BarChartVerticalComponent } from "@/components/ChartComponents";
 
-import { fetchBrandsVsSales, fetchMostSoldProducts, fetchBusiestStores } from "@/api/data-calls";
+import { fetchBrandsVsSales, fetchMostSoldProducts, fetchBusiestStores, fetchSales6Months } from "@/api/data-calls";
 import { set } from "lodash";
 
 

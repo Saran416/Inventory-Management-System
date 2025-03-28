@@ -227,18 +227,6 @@ export function AreaChartComponent() {
         >
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="#4F46E5"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#C7D2FE"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
               <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
@@ -287,13 +275,6 @@ export function AreaChartComponent() {
               type="natural"
               fill="url(#fillMobile)"
               stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />
