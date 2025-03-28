@@ -25,7 +25,29 @@ export async function fetchSales(start_date, end_date, location, salesman_name, 
   }
 }
 
+export async function addSale(customer_name, customer_number, product_ID, quantity, employee_ID) {
+  try {
+    const response = await fetch(`${API_URL}/sales/add-sale`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ customer_name, customer_number, product_ID, quantity, employee_ID }),
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, message: errorData.message || "Failed to add sale" };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding sale", error);
+
+    return {
+      success: false,
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+}
 
 
 

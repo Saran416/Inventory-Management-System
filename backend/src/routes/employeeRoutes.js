@@ -1,5 +1,6 @@
 const express = require("express");
 const { 
+  getEmployeeId,
   getEmployeePosition, 
   getAllEmployees,
   employeeExists, 
@@ -16,6 +17,7 @@ const {
 const router = express.Router();
 
 // router.get("/user/:username", getUserInfo);
+router.get("/get-employee-id", getEmployeeId);
 router.get("/employee-position", getEmployeePosition);
 router.get("/fetch-all-employees", getAllEmployees);
 router.get("/employee-exists", employeeExists);

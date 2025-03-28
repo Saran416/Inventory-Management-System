@@ -1,6 +1,30 @@
 const pool = require("../config/db");
 const bcrypt = require("bcryptjs");
 
+exports.getEmployeeId = async (req, res) => {
+  const { employee_name } = req.query;
+  try {
+    const [rows] = await pool.query(
+      "SELECT employee_ID FROM employee WHERE employee_name = ?",
+      [employee_name]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Employee not found" });
+    }
+
+    const employee_ID = rows[0].employee_ID;
+
+    res.json({ success: true, employee_ID });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
+
 exports.getEmployeePosition = async (req, res) => {
   const { employee_name } = req.query;
 
@@ -96,7 +120,6 @@ exports.employeeExists = async (req, res) => {
     });
   }
 };
-
 
 exports.addAdmin = async (req, res) => {
   const { employee_name, password } = req.body;

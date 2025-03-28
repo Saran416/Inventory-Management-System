@@ -74,3 +74,23 @@ exports.getSales = async (req, res) => {
   }
 };
   
+exports.addSale = async (req, res) => {
+  const { customer_name, customer_number, product_ID, quantity, employee_ID } = req.body;
+
+  try {
+    let [response] = await pool.query(
+      `CALL process_sale (?, ?, ?, ?, ?)`,
+      [customer_name, customer_number, product_ID, quantity, employee_ID]
+    );
+
+    res.json({ success: true, message: "Sale added successfully." });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+
+  // res.json({ success: true, sale_ID: 1 });
+}

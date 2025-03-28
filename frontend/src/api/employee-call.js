@@ -1,5 +1,24 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+export async function fetchEmployeeID(employee_name) {
+  try {
+    const response = await fetch(`${API_URL}/employee/get-employee-id?employee_name=${encodeURIComponent(employee_name)}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, message: errorData.message || "Failed to fetch employee ID" };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return { success: false, message: "Network error: Unable to connect to the server." };
+  }
+}
+
 export async function fetchEmployeePosition(employee_name) {
   try {
     const response = await fetch(`${API_URL}/employee/employee-position?employee_name=${encodeURIComponent(employee_name)}`, {

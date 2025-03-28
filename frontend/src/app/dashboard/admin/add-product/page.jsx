@@ -84,7 +84,7 @@ export default function AddFacilityPage() {
     let response = await addProduct(productName, productPrice, productCategoryID, productBrandName)
     // let response = { success: true, message: "Added" };
 
-    console.log("Added ", productName, productPrice, productCategoryID, productBrandName);
+    // console.log("Added ", productName, productPrice, productCategoryID, productBrandName);
 
     if (response.success) {
       toast.success("Success", {
