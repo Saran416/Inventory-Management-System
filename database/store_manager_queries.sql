@@ -2,7 +2,7 @@
 SELECT 
     e.employee_ID, 
     e.employee_name, 
-    e.position, 
+    e.position
 FROM employee e
 LEFT JOIN facility f ON e.works_in = f.facility_ID
 WHERE e.works_in = GetFacilityByEmployee(5)  -- Replace 5 with the actual employee_ID
@@ -39,6 +39,11 @@ JOIN facility f ON s.facility_ID = f.facility_ID
 WHERE s.facility_ID = GetFacilityByEmployee(5);  -- Replace 5 with an actual employee_ID
 AND p.name = 'Nike Air Max' -- change accordingly
 
+-- update reorder level
+UPDATE stock
+SET reorder_level = 20  -- Replace with the new reorder level
+WHERE product_ID = 1  -- Replace with the actual product_ID
+AND facility_ID = GetFacilityByEmployee(5);  -- Replace 5 with the actual employee_ID
 
 -- view Inventory Transactions
 SELECT 
@@ -78,3 +83,32 @@ WHERE alert_ID = 1;  -- Replace with the actual alert_ID to delete
 
 
 -- Apply for Inventory Transaction
+DELIMITER $$
+
+CREATE PROCEDURE RequestInventoryTransaction(
+    IN warehouse_ID INT,
+    IN emp_ID INT,
+    IN prod_ID INT,
+    IN stock_quantity INT
+)
+BEGIN
+    -- Insert the inventory transaction request
+    INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed)
+    VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity,0);
+END $$
+
+DELIMITER ;
+
+
+-- Mark Transaction as completed
+DELIMITER $$
+CREATE PROCEDURE MarkTransactionAsCompleted(
+    IN transaction_ID INT
+)
+BEGIN
+    -- Update the inventory transaction to mark it as completed
+    UPDATE inventory_transactions
+    SET processed = 1
+    WHERE transaction_ID = transaction_ID;
+END $$
+DELIMITER ;

@@ -43,18 +43,5 @@ SELECT
 FROM stock s
 JOIN product p ON s.product_ID = p.product_ID
 JOIN facility f ON s.facility_ID = f.facility_ID
-WHERE f.location = 'Store 1 - Bengaluru'  -- Replace with an actual location from facility table
+WHERE f.facility_ID = GetFacilityByEmployee(5)  -- Replace with warehouse manager ID
 AND p.name = 'Nike Air Max'  -- Replace with an actual product name
-
-
--- view Employees
-SELECT 
-    e.employee_ID, 
-    e.employee_name, 
-    e.position, 
-    COALESCE(f.location, 'Not Assigned') AS facility_location
-FROM employee e
-LEFT JOIN facility f ON e.works_in = f.facility_ID
-WHERE f.location = 'Store 1 - Bengaluru'  -- Replace with an actual location from the facility table
-AND e.position = 'warehouse_manager'  -- Replace with an actual position from the employee table
-AND e.employee_name = 'John Doe';  -- Replace with an actual employee name
