@@ -16,8 +16,8 @@ CREATE TABLE employee (
     FOREIGN KEY (works_in) REFERENCES facility(facility_ID) ON DELETE SET NULL
 );
 
--- INSERT INTO employee (employee_name, position, works_in, password)
--- VALUES ('admin1', 'admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJlItrnBJIphQALN6');
+INSERT INTO employee (employee_name, position, works_in, password)
+VALUES ('admin1', 'admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJlItrnBJIphQALN6');
 
 
 -- Create Brand Table

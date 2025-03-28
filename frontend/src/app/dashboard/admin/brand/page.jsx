@@ -96,7 +96,7 @@ export default function BrandPage() {
       console.error("Error fetching brands:", fetchBrandsResponse.message);
       return;
     }
-    return fetchBrandsResponse.brands;
+    return fetchBrandsResponse.data;
 
   }
 
@@ -204,7 +204,8 @@ export default function BrandPage() {
   });
 
   return (
-    <div className="w-full px-5">
+    <div className="w-full px-5 pt-5">
+      <div className="font-semibold tracking-tight text-3xl">Brands</div>
       <div className="flex items-center py-4">
         <Dialog>
           <DialogTrigger asChild>

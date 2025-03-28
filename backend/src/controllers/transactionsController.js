@@ -79,57 +79,57 @@ exports.getFactoryOrders = async (req, res) => {
   const { 
     start_date, 
     end_date, 
-    from_location, 
-    to_location, 
-    product_name } = req.query;
+    employee_name, 
+    product_name,
+    processed,
+   } = req.query;
 
   try {
     let query = `
       SELECT 
         fo.order_ID, 
-        fo.Time AS order_time,
+        fo.order_time, 
         p.name AS product_name, 
-        f_to.location AS requested_to_location,
-        f_from.location AS requested_from_location,  -- New column added
-        e.employee_name AS requested_by_employee,
-        fo.quantity,
+        e.employee_name AS ordered_by_employee, 
+        fo.quantity, 
         fo.processed
       FROM factory_orders fo
       JOIN product p ON fo.product_ID = p.product_ID
-      JOIN facility f_to ON fo.requested_to = f_to.facility_ID
-      JOIN employee e ON fo.requested_by = e.employee_ID
-      LEFT JOIN facility f_from ON e.works_in = f_from.facility_ID
+      JOIN employee e ON fo.ordered_by = e.employee_ID
     `;
 
     let conditions = [];
     let queryParams = [];
 
     if (start_date) {
-      conditions.push(`fo.Time >= ?`);
+      conditions.push(`fo.order_time >= ?`);
       queryParams.push(start_date);
     }
 
     if (end_date) {
-      conditions.push(`fo.Time <= ?`);
+      conditions.push(`fo.order_time <= ?`);
       queryParams.push(end_date);
     }
 
-    if (from_location) {
-      conditions.push(`f_from.location LIKE ?`);
-      queryParams.push(`%${from_location}%`);
-    }
-
-    if (to_location) {
-      conditions.push(`f_to.location LIKE ?`);
-      queryParams.push(`%${to_location}%`);
-    }
+    if (employee_name) {
+      conditions.push(`e.employee_name LIKE ?`);
+      queryParams.push(`%${employee_name}%`);
+    } 
 
     if (product_name) {
       conditions.push(`p.name LIKE ?`);
       queryParams.push(`%${product_name}%`);
     }
 
-    conditions.push(`fo.processed = 1`); // Only show processed orders
+    if (processed) {
+      if (processed === "TRUE") {
+        conditions.push(`fo.processed = TRUE`);
+      } else if (processed === "FALSE") {
+        conditions.push(`fo.processed = FALSE`);
+      }
+    }
+
+    conditions.push(`fo.processed = FALSE`);
 
     if (conditions.length > 0) {
       query += ` WHERE ` + conditions.join(" AND ");

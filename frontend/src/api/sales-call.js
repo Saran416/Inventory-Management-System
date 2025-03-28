@@ -9,12 +9,11 @@ export async function fetchSales(start_date, end_date, location, salesman_name, 
         headers: { "Content-Type": "application/json" },
       });
   
-    // console.log("response", response);
     if (!response.ok) {
       const errorData = await response.json();
       return { success: false, message: errorData.message || "Failed to fetch sales data" };
     }
-    // console.log("response", response);
+
     return await response.json();
   } catch (error) {
     console.error("Error fetching sales data", error);

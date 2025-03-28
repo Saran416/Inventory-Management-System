@@ -87,7 +87,17 @@ SELECT
     DATE(sale_time) AS sale_date,  -- Extract only the date
     COUNT(*) AS total_sales
 FROM sales
-WHERE sale_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+WHERE sale_time >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+GROUP BY sale_date
+ORDER BY sale_date DESC;
+
+-- price of sales vs 6 months
+SELECT 
+    DATE_FORMAT(s.sale_time, '%Y-%m-%d') AS sale_date,  
+    SUM(s.quantity * p.price) AS total_sales_amount 
+FROM sales s
+JOIN product p ON s.product_ID = p.product_ID 
+WHERE s.sale_time >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
 GROUP BY sale_date
 ORDER BY sale_date DESC;
 

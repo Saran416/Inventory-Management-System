@@ -1,5 +1,20 @@
 const pool = require("../config/db");
 
+exports.getBrandNames = async(req, res) => {
+  try {
+    const [result] = await pool.query(
+      "SELECT brand_name FROM brand"
+    );
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
+
 exports.getBrands = async(req, res) => {
   const { brand_name } = req.query;
 
@@ -24,7 +39,7 @@ exports.getBrands = async(req, res) => {
     }
 
     const [result] = await pool.query(query, queryParams);
-    res.json({ success: true, brands: result });
+    res.json({ success: true, data: result });
   } catch (error) {
     console.error("Database error:", error);
     res.status(500).json({
