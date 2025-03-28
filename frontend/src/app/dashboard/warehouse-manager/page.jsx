@@ -46,7 +46,7 @@ function AccordionComponent() {
 
 function DashBoard() {
 
-
+  
   return (
     <div className="p-10">
       <div className="font-semibold tracking-tight text-3xl">Dashboard</div>
@@ -54,6 +54,7 @@ function DashBoard() {
       <div className="grid grid-cols-12 gap-10 mt-10">
         <div className="col-span-12">
           <AccordionComponent />
+          
         </div>
         
       </div>

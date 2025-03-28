@@ -108,7 +108,7 @@ CREATE PROCEDURE MarkTransactionAsCompleted(
 BEGIN
     -- Update the inventory transaction to mark it as completed
     UPDATE inventory_transactions
-    SET processed = 1
+    SET processed = "completed"
     WHERE transaction_ID = transaction_ID;
 END $$
 DELIMITER ;

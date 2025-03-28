@@ -5,7 +5,7 @@ import { fetchSales } from "@/api/sales-call";
 
 import { fetchInventoryTransactions } from "@/api/transactions-calls";
 
-import { fetchInventoryTransactionsByManagerID } from "@/api/transactions-calls";
+import { fetchInventoryTransactionsByStoreManagerID } from "@/api/transactions-calls";
 import { fetchEmployeeID } from "@/api/employee-call";
 
 import { debounce } from "lodash";
@@ -60,7 +60,32 @@ import {
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
+import { CheckCheck } from "lucide-react"
+
+import { acceptTransactionByStoreManager } from "@/api/transactions-calls";
+
+const acceptTransactionHandler = async (transaction_ID) => {
+  const acceptTransactionResponse = await acceptTransactionByStoreManager(transaction_ID);
+  if (!acceptTransactionResponse.success) {
+    toast.error("Error", {
+      description: acceptTransactionResponse.message,
+    });
+    return;
+  }
+  toast.success("Transaction accepted successfully");
+};
 
 
 
@@ -131,6 +156,38 @@ export const columns = [
     header: "Status",
     cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
   },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+ 
+      return (
+        row.getValue("processed") === "completed" && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0 hover:text-green-500">
+                <CheckCheck />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently accept the stock transaction from the warehouse.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => {acceptTransactionHandler(row.original.transaction_ID)}}>Accept</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+
+       
+      )
+    },
+  },
 ];
 
 export default function InventoryTransactionsPage() {
@@ -158,7 +215,7 @@ export default function InventoryTransactionsPage() {
         }
         const manager_ID = employeeIDResponse.employee_ID;
     
-    const inventoryTransactionsResponse = await fetchInventoryTransactionsByManagerID(
+    const inventoryTransactionsResponse = await fetchInventoryTransactionsByStoreManagerID(
       start_date_query,
       end_date_query,
       from_location_query,

@@ -74,7 +74,7 @@ exports.getInventoryTransactions = async (req, res) => {
   }
 };
   
-exports.getInventoryTransactionsByManagerID = async (req, res) => {
+exports.getInventoryTransactionsByStoreManagerID = async (req, res) => {
   const { manager_ID,
     start_date, 
     end_date, 

@@ -5,7 +5,7 @@ import { fetchSales } from "@/api/sales-call";
 
 import { fetchInventoryTransactions } from "@/api/transactions-calls";
 
-import { fetchInventoryTransactionsByManagerID } from "@/api/transactions-calls";
+import { fetchInventoryTransactionsByStoreManagerID } from "@/api/transactions-calls";
 import { fetchEmployeeID } from "@/api/employee-call";
 
 import { debounce } from "lodash";
@@ -158,7 +158,7 @@ export function CurrentOrdersTable() {
         }
         const manager_ID = employeeIDResponse.employee_ID;
     
-    const inventoryTransactionsResponse = await fetchInventoryTransactionsByManagerID(
+    const inventoryTransactionsResponse = await fetchInventoryTransactionsByStoreManagerID(
       start_date_query,
       end_date_query,
       from_location_query,
@@ -240,7 +240,7 @@ export function CurrentOrdersTable() {
 
 
   return (
-    <div className="w-full px-5">
+    <div className="w-full">
       <div className="flex items-center py-4">
         {/* <Input
           placeholder="Filter emails..."
