@@ -68,3 +68,23 @@ WHERE f1.type = 'store' AND f2.type = 'warehouse'
 GROUP BY s.facility_ID, it.requested_to, f1.location, f2.location
 ORDER BY Transaction_Count DESC
 LIMIT 5;
+
+-- sales vs month 
+SELECT DATE_FORMAT(sale_time, '%Y-%m') AS sale_month, COUNT(*) AS total_sales
+FROM sales
+WHERE sale_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+GROUP BY sale_month
+ORDER BY sale_month;
+
+--sales vs year
+SELECT YEAR(sale_time) AS sale_year, COUNT(*) AS total_sales
+FROM sales
+GROUP BY sale_year
+ORDER BY sale_year;
+
+-- sales of last 30 days
+SELECT sale_ID, sale_time, facility_ID, employee_ID, customer_ID, product_ID, quantity
+FROM sales
+WHERE sale_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+ORDER BY sale_time DESC;
+
