@@ -41,3 +41,24 @@ export async function fetchMostSoldProducts() {
     };
   }
 };
+
+export async function fetchBusiestStores() {
+  try {
+    const response = await fetch(`${API_URL}/data/busiest-stores`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return { success: false, message: responseData.message || "Failed to fetch busiest stores data" };
+    }
+    return responseData;
+  } catch (error) {
+    console.error("Error fetching busiest stores data:", error);
+    return {
+      success: false,
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+}

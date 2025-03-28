@@ -10,9 +10,9 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 import { Button } from '@/components/ui/button';
 
-import { PieChartComponent, AreaChartComponent, BarChartComponent } from "@/components/ChartComponents";
+import { PieChartComponent, AreaChartComponent, BarChartComponent, BarChartVerticalComponent } from "@/components/ChartComponents";
 
-import { fetchBrandsVsSales, fetchMostSoldProducts } from "@/api/data-calls";
+import { fetchBrandsVsSales, fetchMostSoldProducts, fetchBusiestStores } from "@/api/data-calls";
 import { set } from "lodash";
 
 
@@ -33,91 +33,102 @@ function DashBoard() {
 
   const [BarChart2Data, setBarChart2Data] = useState([]);
   const [BarChart2Config, setBarChart2Config] = useState({});
+  const [BarChart2YAxisDataKey, setBarChart2YAxisDataKey] = useState("");
+  const [BarChart2XAxisDataKey, setBarChart2XAxisDataKey] = useState("");
 
   const [AreaChart1Data, setAreaChart1Data] = useState([]);
   const [AreaChart1Config, setAreaChart1Config] = useState({});
 
   const dataFetchWrapper = async() => {
-    const brandVsSalesRespones = await fetchBrandsVsSales()
-    console.log(brandVsSalesRespones.data)
+    // const generateColor = (index) => {
+    //   const colors = [
+    //     "rgb(255, 85, 51)",   // --chart-1: 12 76% 61% (orange-red)
+    //     "rgb(49, 152, 128)",  // --chart-2: 173 58% 39% (teal)
+    //     "rgb(38, 79, 102)",   // --chart-3: 197 37% 24% (navy blue)
+    //     "rgb(225, 225, 91)",  // --chart-4: 43 74% 66% (yellow-green)
+    //     "rgb(238, 192, 93)",  // --chart-5: 27 87% 67% (light orange)
+    //   ]
+    //   return colors[index % colors.length]
+    // }
 
     const generateColor = (index) => {
       const colors = [
-        "oklch(0.646 0.222 41.116)",
-        "oklch(0.6 0.118 184.704)",
-        "oklch(0.398 0.07 227.392)",
-        "oklch(0.828 0.189 84.429)",
-        "oklch(0.769 0.188 70.08)",
+        "rgb(0, 0, 0)",   // --chart-1: 12 76% 61% (orange-red)
+        "rgb(43, 43, 43)",  // --chart-2: 173 58% 39% (teal)
+        "rgb(73, 73, 73)",   // --chart-3: 197 37% 24% (navy blue)
+        "rgb(87, 87, 87)",  // --chart-4: 43 74% 66% (yellow-green)
+        "rgb(134, 134, 134)",  // --chart-5: 27 87% 67% (light orange)
       ]
       return colors[index % colors.length]
     }
+    
 
-    // Generate PieChartData and PieChartConfig
+    const brandVsSalesRespones = await fetchBrandsVsSales();
     const PieChartData = brandVsSalesRespones.data.map((item, index) => ({
       Brand: item.Brand,
       Total_Sales_Amount: parseFloat(item.Total_Sales_Amount),
       fill: generateColor(index),
-    }))
-
+    }));
     const PieChartConfig = brandVsSalesRespones.data.reduce((acc, item, index) => {
       acc[item.Brand] = {
         label: item.Brand,
-        color: `hsl(var(--chart-${index + 1}))`,
+        color: generateColor(index),
       }
       return acc
     }, {
       Total_Sales_Amount: {
         label: "Total Sales Amount",
       },
-    })
+    });
+    setPieChart1Data(PieChartData);
+    setPieChart1Config(PieChartConfig);
+    setPieChart1DataKey("Total_Sales_Amount");
+    setPieChart1NameKey("Brand");
 
-    // Set the data and config
-    // After setting data and config
-    setPieChart1Data(PieChartData)
-    setPieChart1Config(PieChartConfig)
-    setPieChart1DataKey("Total_Sales_Amount")
-    setPieChart1NameKey("Brand")
+    const mostSoldProductsResponse = await fetchMostSoldProducts();
+    const BarChart1Data = mostSoldProductsResponse.data.map((item, index) => ({
+      Product: item.Product,
+      Total_Quantity_Sold: parseFloat(item.Total_Quantity_Sold),
+      fill: 'rgb(32, 32, 32)',
+    }));
+    const BarChart1Config = mostSoldProductsResponse.data.reduce((acc, item, index) => {
+      acc[item.Product] = {
+        label: item.Product,
+        color: generateColor(index),
+      }
+      return acc
+    }, {
+      Total_Quantity_Sold: {
+        label: "Quantity Sold",
+      },
+    });
+    setBarChart1Data(BarChart1Data);
+    setBarChart1Config(BarChart1Config);
+    setBarChart1XAxisDataKey("Total_Quantity_Sold");
+    setBarChart1YAxisDataKey("Product");
 
 
-    const barChart1Data = [
-      { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-      { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-      { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-      { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-      { browser: "other", visitors: 90, fill: "var(--color-other)" },
-    ]
-    
-    const barChart1Config = {
-      visitors: {
-        label: "Visitors",
+    const busiestStoresResponse = await fetchBusiestStores();
+    const BarChart2Data = busiestStoresResponse.data.map((item, index) => ({
+      Store: item.Store,
+      Total_Sales_Amount: parseFloat(item.Total_Sales_Amount),
+      fill: 'rgb(32, 32, 32)',
+    }));
+    const BarChart2Config = busiestStoresResponse.data.reduce((acc, item, index) => {
+      acc[item.Store] = {
+        label: item.Store,
+        color: generateColor(index),
+      }
+      return acc
+    }, {
+      Total_Sales_Amount: {
+        label: "Sales Amount",
       },
-      chrome: {
-        label: "Chrome",
-        color: "hsl(var(--chart-1))",
-      },
-      safari: {
-        label: "Safari",
-        color: "hsl(var(--chart-2))",
-      },
-      firefox: {
-        label: "Firefox",
-        color: "hsl(var(--chart-3))",
-      },
-      edge: {
-        label: "Edge",
-        color: "hsl(var(--chart-4))",
-      },
-      other: {
-        label: "Other",
-        color: "hsl(var(--chart-5))",
-      },
-    }
-
-    setBarChart1Data(barChart1Data)
-    setBarChart1Config(barChart1Config)
-    setBarChart1XAxisDataKey("visitors")
-    setBarChart1YAxisDataKey("browser")
-
+    });
+    setBarChart2Data(BarChart2Data);
+    setBarChart2Config(BarChart2Config);
+    setBarChart2XAxisDataKey("Total_Sales_Amount");
+    setBarChart2YAxisDataKey("Store");
 
   }
 
@@ -152,17 +163,40 @@ function DashBoard() {
     <>
       <div className="p-10">
         <h1>Welcome, {user.username}</h1>
-        <div className="flex flex-wrap  pt-10">
-          <div className="w-[30%]">
+
+
+        <div className="flex gap-10  pt-10 pb-10">
+          <div className="w-full">
             <PieChartComponent ChartData={PieChart1Data} ChartConfig={PieChart1Config} ChartDataKey={PieChart1DataKey} ChartNameKey={PieChart1NameKey} />
-
           </div>
-          
-          <div className="w-[30%]">
-            <BarChartComponent ChartData={BarChart1Data} ChartConfig={BarChart1Config} XAxisDataKey={BarChart1XAxisDataKey} YAxisDataKey={BarChart1YAxisDataKey} />
-
+          <div className="w-full">
+            <BarChartVerticalComponent 
+              ChartTitle={"Most Sold Products"} 
+              RightMargin={30}
+              LeftMargin={10}
+              TooltipWidth={20}
+              ChartData={BarChart1Data} 
+              ChartConfig={BarChart1Config} 
+              XAxisDataKey={BarChart1XAxisDataKey} 
+              YAxisDataKey={BarChart1YAxisDataKey} 
+            />
+          </div>
+          <div className="w-full">
+            <BarChartVerticalComponent 
+              ChartTitle={"Busiest Stores"} 
+              RightMargin={30}
+              TooltipWidth={200}
+              ChartData={BarChart2Data} 
+              ChartConfig={BarChart2Config} 
+              XAxisDataKey={BarChart2XAxisDataKey} 
+              YAxisDataKey={BarChart2YAxisDataKey} 
+            />
           </div>
         </div>
+
+        
+
+
         <AreaChartComponent />
         
       </div>
