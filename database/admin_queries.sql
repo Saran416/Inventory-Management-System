@@ -90,7 +90,7 @@ AND p.name = 'Nike Air Max'  -- Replace with an actual product name
 AND it.processed = FALSE;  -- Show only unprocessed transactions
 
 
--- view factory details 
+-- view factory orders 
 SELECT 
     fo.order_ID, 
     fo.order_time, 
