@@ -13,7 +13,7 @@ JOIN employee e ON s.employee_ID = e.employee_ID
 JOIN customer c ON s.customer_ID = c.customer_ID
 JOIN product p ON s.product_ID = p.product_ID
 WHERE s.sale_time >= '2025-03-22' AND s.sale_time < '2026-03-23'  -- Adjust based on available data
-AND f.location = 'Store 1 - Bengaluru'  -- Replace with an actual location from the facility table
+AND f.location = 'Store 1 - Bengaluru' -- Replace with an actual location from the facility table
 AND e.employee_name = 'Charlie Lee'  -- Replace with an actual employee name
 AND p.name = 'Nike Air Max';  -- Replace with an actual product name
 
