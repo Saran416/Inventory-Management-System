@@ -61,4 +61,25 @@ export async function fetchBusiestStores() {
       message: "Network error: Unable to connect to the server.",
     };
   }
-}
+};
+
+export async function fetchSales6Months() {
+  try {
+    const response = await fetch(`${API_URL}/data/sales-6-months`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return { success: false, message: responseData.message || "Failed to fetch sales data" };
+    }
+    return responseData;
+  } catch (error) {
+    console.error("Error fetching sales data:", error);
+    return {
+      success: false,
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+};

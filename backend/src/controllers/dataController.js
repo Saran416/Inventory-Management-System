@@ -75,14 +75,16 @@ exports.getBusiestStores = async (req, res) => {
 }
 
 exports.getSales6Months = async (req, res) => {
-
   try {
     let query = `
       SELECT 
-        DATE(s.time) AS Date,
-        SUM(s.quantity * p.price) AS Total_Sales_Amount
+        DATE_FORMAT(s.sale_time, '%Y-%m-%d') AS sale_date,  
+        SUM(s.quantity * p.price) AS total_sales_amount 
       FROM sales s
-      JOIN product p ON s.product_ID = p.product_ID
+      JOIN product p ON s.product_ID = p.product_ID 
+      WHERE s.sale_time >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+      GROUP BY sale_date
+      ORDER BY sale_date DESC;
     `;
 
     const [result] = await pool.query(query);

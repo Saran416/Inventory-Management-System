@@ -38,15 +38,16 @@ export function LoginForm({ className, ...props }) {
 
     const data = await validateLogin(employeeName, password);
 
-  if (data.success) {
-    setAuth(true);
-    localStorage.setItem("user", JSON.stringify({ username: employeeName }));
-    router.push(`/dashboard/${data.position}`);
-  } else {
-    toast.error("Login Failed", {
-      description: data.message, // This now includes invalid credentials & server error messages
-    });
-  }
+    if (data.success) {
+      setAuth(true);
+      localStorage.setItem("user", JSON.stringify({ username: employeeName }));
+      let position = data.position;
+      router.push(`/dashboard/${data.position}`);
+    } else {
+      toast.error("Login Failed", {
+        description: data.message, // This now includes invalid credentials & server error messages
+      });
+    }
 
   
   };

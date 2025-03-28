@@ -10,7 +10,7 @@ import { addFacility } from '@/api/facility-calls';
 
 import { set } from 'date-fns';
 
-export default function AddFacilityPage() {
+export default function AddProductPage() {
   const [facilityType, setFacilityType] = useState("");
   const [facilityLocation, setFacilityLocation] = useState("");
   const [facilityCoordinates, setFacilityCoordinates] = useState("");

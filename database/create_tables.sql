@@ -91,6 +91,15 @@ CREATE TABLE sales (
     quantity INT NOT NULL
 );
 
+-- Create Alerts Table
+CREATE TABLE alerts (
+    alert_ID SERIAL PRIMARY KEY,
+    triggerd_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    facility_ID BIGINT UNSIGNED REFERENCES facility(facility_ID) ON DELETE CASCADE,
+    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE,
+    acknowledged BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 -- Adding Constraints
 ALTER TABLE product ADD CONSTRAINT positive_price CHECK (price >= 0);
 ALTER TABLE sales ADD CONSTRAINT sales_positive_quantity CHECK (quantity > 0);
