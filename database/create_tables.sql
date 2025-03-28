@@ -106,3 +106,93 @@ ALTER TABLE factory_orders ADD CONSTRAINT factory_orders_positive_quantity CHECK
 ALTER TABLE inventory_transactions ADD CONSTRAINT inventory_transactions_positive_quantity CHECK (quantity > 0);
 ALTER TABLE stock ADD CONSTRAINT stock_positive_quantity CHECK (quantity > 0);
 ALTER TABLE stock ADD CONSTRAINT positive_reorder_level CHECK (reorder_level > 0);
+
+
+-- ALL THE FUNCTIONS
+
+DELIMITER $$
+
+CREATE FUNCTION GetFacilityByEmployee(emp_ID INT) RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE facility_ID INT;
+    
+    SELECT works_in INTO facility_ID 
+    FROM employee 
+    WHERE employee_ID = emp_ID;
+    
+    RETURN facility_ID;
+END $$
+
+DELIMITER ;
+
+-- ALL THE STORED PROCEDURES
+
+-- processing sales
+DELIMITER $$
+
+CREATE PROCEDURE process_sale(
+    IN p_customer_name VARCHAR(50),
+    IN p_customer_number VARCHAR(15),
+    IN p_product_id BIGINT UNSIGNED,
+    IN p_quantity INT,
+    IN p_employee_id BIGINT UNSIGNED
+)
+BEGIN
+    DECLARE v_customer_id BIGINT;
+    DECLARE v_facility_id BIGINT;
+    DECLARE v_existing_stock INT;
+
+    -- Check if the customer already exists
+    SELECT customer_ID INTO v_customer_id
+    FROM customer
+    WHERE customer_name = p_customer_name AND mobile = p_customer_number
+    LIMIT 1;
+
+    -- If the customer does not exist, insert them
+    IF v_customer_id IS NULL THEN
+        INSERT INTO customer (customer_name, mobile) 
+        VALUES (p_customer_name, p_customer_number);
+        SET v_customer_id = LAST_INSERT_ID();
+    END IF;
+
+    -- Get the facility where the employee works
+    SELECT works_in INTO v_facility_id
+    FROM employee
+    WHERE employee_ID = p_employee_id;
+
+    -- Check current stock for the product in the facility
+    SELECT quantity INTO v_existing_stock
+    FROM stock
+    WHERE product_ID = p_product_id AND facility_ID = v_facility_id
+    LIMIT 1;
+
+    -- Update stock
+    UPDATE stock
+    SET quantity = quantity - p_quantity
+    WHERE product_ID = p_product_id AND facility_ID = v_facility_id;
+
+    -- Insert into sales table
+    INSERT INTO sales (facility_ID, employee_ID, customer_ID, product_ID, quantity)
+    VALUES (v_facility_id, p_employee_id, v_customer_id, p_product_id, p_quantity);
+    
+END $$
+
+DELIMITER ;
+
+-- ALL TRIGGERS
+
+DELIMITER $$
+
+-- updating the alert table
+CREATE TRIGGER stock_alert_trigger
+AFTER UPDATE ON stock
+FOR EACH ROW
+BEGIN
+    IF NEW.quantity < NEW.reorder_level THEN
+        INSERT INTO alerts (facility_ID, product_ID)
+        VALUES (NEW.facility_ID, NEW.product_ID, FALSE);
+    END IF;
+END $$
+
+DELIMITER ;

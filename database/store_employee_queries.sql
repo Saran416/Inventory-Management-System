@@ -1,20 +1,3 @@
-DELIMITER $$
-
-CREATE FUNCTION GetFacilityByEmployee(emp_ID INT) RETURNS INT
-DETERMINISTIC
-BEGIN
-    DECLARE facility_ID INT;
-    
-    SELECT works_in INTO facility_ID 
-    FROM employee 
-    WHERE employee_ID = emp_ID;
-    
-    RETURN facility_ID;
-END $$
-
-DELIMITER ;
-
-
 -- view Stock
 SELECT 
     p.name AS product_name,
