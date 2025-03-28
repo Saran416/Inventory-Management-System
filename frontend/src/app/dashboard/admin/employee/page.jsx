@@ -72,10 +72,10 @@ import { toast } from "sonner";
 const positions = [
   ["admin", "Admin"],
   ["auditor", "Auditor"],
-  ["warehouse_manager", "Warehouse Manager"],
-  ["warehouse_employee", "Warehouse Employee"],
-  ["store_manager", "Store Manager"],
-  ["store_employee", "Store Employee"],
+  ["warehouse-manager", "Warehouse Manager"],
+  ["warehouse-employee", "Warehouse Employee"],
+  ["store-manager", "Store Manager"],
+  ["store-employee", "Store Employee"],
   ["all", "All"],
 ];
 

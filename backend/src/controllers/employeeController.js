@@ -175,8 +175,6 @@ exports.addAdmin = async (req, res) => {
       return res.status(409).json({ success: false, message: "Employee with this name already exists" });
     }
 
-    console.log(password)
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await pool.query(

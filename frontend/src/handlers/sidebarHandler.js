@@ -226,9 +226,9 @@ export function generateSidebarData(employee_name, position) {
         { title: "Dashboard", url: "/dashboard/store-manager", icon: SquareTerminal },
         { title: "Inventory transactions", url: "/dashboard/store-manager/inventory-transactions" },
         { title: "Stock", url: "/dashboard/store-manager/stock" },
-        { title: "Sales", url: "/dashboard/store-manager/sale" },
+        { title: "Sales", url: "/dashboard/store-manager/sales" },
         { title: "Employees", url: "/dashboard/store-manager/employee" },
-        { title: "Request stock", url: "/dashboard/store-manager/stock-request" },
+        { title: "Request stock", url: "/dashboard/store-manager/request-stock" },
       ],
     };
   } else if (position === "store-employee") {

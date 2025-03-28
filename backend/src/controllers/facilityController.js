@@ -56,6 +56,19 @@ exports.getFacilityLocFromID = async (req, res) => {
   }
 };
 
+exports.getWarehouses = async (req, res) => {
+  try {
+    const [result] = await pool.query("SELECT * FROM facility WHERE type = 'warehouse'");
+    res.json({ success: true, warehouses: result });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
+
 exports.getWarehouseLocations = async (req, res) => {
   try {
     const [result] = await pool.query("SELECT location FROM facility WHERE type = 'warehouse'");

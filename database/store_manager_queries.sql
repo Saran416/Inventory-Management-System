@@ -59,7 +59,7 @@ JOIN product p ON it.product_ID = p.product_ID
 JOIN facility f_to ON it.requested_to = f_to.facility_ID
 JOIN employee e ON it.requested_by = e.employee_ID
 LEFT JOIN facility f_from ON e.works_in = f_from.facility_ID
-WHERE f_from.facility_ID = GetFacilityByEmployee(5);  -- Replace 5 with actual employee_ID
+WHERE f_from.facility_ID = GetFacilityByEmployee(5)  -- Replace 5 with actual employee_ID
 AND it.Time >= '2025-01-01' AND it.Time < '2026-01-01'  -- Adjust date range as needed
 AND f_to.location = 'Warehouse 1 - Mumbai'  -- Replace with an actual facility location
 AND p.name = 'Nike Air Max'  -- Replace with an actual product name
@@ -94,7 +94,7 @@ CREATE PROCEDURE RequestInventoryTransaction(
 BEGIN
     -- Insert the inventory transaction request
     INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed)
-    VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity,0);
+    VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity, "sent");
 END $$
 
 DELIMITER ;
