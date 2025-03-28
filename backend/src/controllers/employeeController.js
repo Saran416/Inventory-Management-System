@@ -98,6 +98,46 @@ exports.getAllEmployees = async (req, res) => {
   }
 };
 
+exports.getEmployeesByManagerID = async (req, res) => {
+  const { manager_ID, employee_name } = req.query;
+  try {
+    let query = `
+      SELECT 
+        e.employee_ID, 
+        e.employee_name, 
+        e.position 
+      FROM employee e
+      LEFT JOIN facility f ON e.works_in = f.facility_ID
+      WHERE e.works_in = GetFacilityByEmployee(?)
+    `
+
+    let conditions = [];
+    let queryParams = [manager_ID];
+
+    if (employee_name) {
+      conditions.push(`e.employee_name LIKE ?`);
+      queryParams.push(`%${employee_name}%`);
+    }
+
+    if (conditions.length > 0) {
+      query += ` AND ` + conditions.join(" AND ");
+    }
+
+    const [result] = await pool.query(query, queryParams);
+
+    res.json({ success: true, employees: result });
+
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
+  
+
+
 exports.employeeExists = async (req, res) => {
   const { employee_name } = req.query;
 

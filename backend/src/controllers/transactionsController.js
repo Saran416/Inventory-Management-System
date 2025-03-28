@@ -73,6 +73,66 @@ exports.getInventoryTransactions = async (req, res) => {
   }
 };
   
+exports.getInventoryTransactionsByManagerID = async (req, res) => {
+  const { manager_id,
+    start_date, 
+    end_date, 
+    from_location, 
+    product_name } = req.params;
+
+  try {
+    let query = `
+      SELECT 
+        it.transaction_ID, 
+        it.Time AS transaction_time,
+        p.name AS product_name, 
+        f_to.location AS requested_to_location,
+        e.employee_name AS requested_by_employee,
+        it.quantity,
+        it.processed
+      FROM inventory_transactions it
+      JOIN product p ON it.product_ID = p.product_ID
+      JOIN facility f_to ON it.requested_to = f_to.facility_ID
+      JOIN employee e ON it.requested_by = e.employee_ID
+      LEFT JOIN facility f_from ON e.works_in = f_from.facility_ID
+      WHERE f_from.facility_ID = GetFacilityByEmployee(?)
+    `;
+
+    let conditions = [];
+    let queryParams = [manager_id];
+
+    if (start_date) {
+      conditions.push(`it.Time >= ?`);
+      queryParams.push(start_date);
+    }
+
+    if (end_date) {
+      conditions.push(`it.Time <= ?`);
+      queryParams.push(end_date);
+    }
+
+    if (from_location) {
+      conditions.push(`f_from.location LIKE ?`);
+      queryParams.push(`%${from_location}%`);
+    }
+
+    if (product_name) {
+      conditions.push(`p.name LIKE ?`);
+      queryParams.push(`%${product_name}%`);
+    }
+
+    conditions.push(`it.processed = FALSE`); // Only show processed transactions
+
+
+    res.json({ success: true, inventory_transactions: result });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
 
 // TODO: check this
 exports.getFactoryOrders = async (req, res) => {

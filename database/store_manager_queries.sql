@@ -19,7 +19,7 @@ DELIMITER ;
 SELECT 
     e.employee_ID, 
     e.employee_name, 
-    e.position, 
+    e.position
 FROM employee e
 LEFT JOIN facility f ON e.works_in = f.facility_ID
 WHERE e.works_in = GetFacilityByEmployee(5)  -- Replace 5 with the actual employee_ID

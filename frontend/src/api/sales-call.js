@@ -25,6 +25,31 @@ export async function fetchSales(start_date, end_date, location, salesman_name, 
   }
 }
 
+export async function fetchSalesByEmployeeID(start_date, end_date, product_name, employee_ID) {
+  try {
+    const queryParams = `?start_date=${encodeURIComponent(start_date)}&end_date=${encodeURIComponent(end_date)}&product_name=${encodeURIComponent(product_name)}&employee_ID=${employee_ID}`;
+
+    const response = await fetch(`${API_URL}/sales/fetch-sales-by-employee-id${queryParams}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, message: errorData.message || "Failed to fetch sales data" };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching sales data", error);
+
+    return {
+      success: false,
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+}
+
 export async function addSale(customer_name, customer_number, product_ID, quantity, employee_ID) {
   try {
     const response = await fetch(`${API_URL}/sales/add-sale`, {
