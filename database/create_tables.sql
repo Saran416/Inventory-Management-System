@@ -60,7 +60,7 @@ CREATE TABLE inventory_transactions (
     requested_to BIGINT UNSIGNED REFERENCES facility(facility_ID) ON DELETE CASCADE,
     requested_by BIGINT UNSIGNED REFERENCES employee(employee_ID) ON DELETE CASCADE,
     quantity INT NOT NULL,
-    processed BOOLEAN NOT NULL DEFAULT FALSE
+    processed ENUM('sent', 'accepted', 'completed') NOT NULL
 );
 
 -- Create Factory Orders Table
@@ -96,8 +96,7 @@ CREATE TABLE alerts (
     alert_ID SERIAL PRIMARY KEY,
     triggerd_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     facility_ID BIGINT UNSIGNED REFERENCES facility(facility_ID) ON DELETE CASCADE,
-    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE,
-    acknowledged BOOLEAN NOT NULL DEFAULT FALSE
+    product_ID BIGINT UNSIGNED REFERENCES product(product_ID) ON DELETE CASCADE
 );
 
 -- Adding Constraints

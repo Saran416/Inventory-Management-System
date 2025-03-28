@@ -1,5 +1,19 @@
--- view customers 
-SELECT * FROM customer;
+DELIMITER $$
+
+CREATE FUNCTION GetFacilityByEmployee(emp_ID INT) RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE facility_ID INT;
+    
+    SELECT works_in INTO facility_ID 
+    FROM employee 
+    WHERE employee_ID = emp_ID;
+    
+    RETURN facility_ID;
+END $$
+
+DELIMITER ;
+
 
 -- view Stock
 SELECT 
@@ -10,28 +24,29 @@ SELECT
 FROM stock s
 JOIN product p ON s.product_ID = p.product_ID
 JOIN facility f ON s.facility_ID = f.facility_ID
-WHERE f.location = 'Store 1 - Bengaluru'  -- Replace with an actual location from facility table
-AND p.name = 'Nike Air Max'  -- Replace with an actual product name
+WHERE s.facility_ID = GetFacilityByEmployee(5);  -- Replace 5 with an actual employee_ID
+AND p.name = 'Nike Air Max' -- change accordingly
+
 
 -- view Sales
-DELIMITER $$
+SELECT
+    s.sale_ID,
+    s.sale_time,
+    f.location AS facility_location,
+    e.employee_name,
+    c.customer_name,
+    p.name AS product_name,
+    s.quantity
+FROM sales s
+JOIN facility f ON s.facility_ID = f.facility_ID
+JOIN employee e ON s.employee_ID = e.employee_ID
+JOIN customer c ON s.customer_ID = c.customer_ID
+JOIN product p ON s.product_ID = p.product_ID
+WHERE s.facility_ID = GetFacilityByEmployee(5);  -- Replace 5 with an actual employee_ID
+AND s.sale_time >= '2025-03-22' AND s.sale_time < '2026-03-23'  -- Adjust based on available data
+AND p.name = 'Nike Air Max';  -- Replace with an actual product name
 
-CREATE PROCEDURE GetEmployeeSales(IN emp_ID BIGINT UNSIGNED)
-BEGIN
-    SELECT 
-        s.sale_ID,
-        s.sale_time,
-        f.location AS facility_location,
-        e.employee_name,
-        c.customer_name,
-        p.name AS product_name,
-        s.quantity
-    FROM sales s
-    JOIN facility f ON s.facility_ID = f.facility_ID
-    JOIN employee e ON s.employee_ID = e.employee_ID
-    JOIN customer c ON s.customer_ID = c.customer_ID
-    JOIN product p ON s.product_ID = p.product_ID
-    WHERE s.employee_ID = emp_ID;
-END $$
 
-DELIMITER ;
+
+
+
