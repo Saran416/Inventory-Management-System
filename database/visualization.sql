@@ -5,7 +5,8 @@ SELECT
 FROM sales s
 JOIN product p ON s.product_ID = p.product_ID
 GROUP BY p.brand_name
-ORDER BY Total_Sales_Amount DESC;
+ORDER BY Total_Sales_Amount DESC
+LIMIT 5;
 
 -- most sold product
 SELECT 
