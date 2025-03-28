@@ -1,0 +1,21 @@
+"filename", "language", "JavaScript", "JavaScript JSX", "CSS", "comment", "blank", "total"
+"/home/vis/Desktop/dbms_project/frontend/src/api/data-calls.js", "JavaScript", 20, 0, 0, 0, 2, 22
+"/home/vis/Desktop/dbms_project/frontend/src/api/employee-call.js", "JavaScript", 16, 0, 0, 0, 3, 19
+"/home/vis/Desktop/dbms_project/frontend/src/api/facility-calls.js", "JavaScript", 19, 0, 0, 0, 1, 20
+"/home/vis/Desktop/dbms_project/frontend/src/api/transactions-calls.js", "JavaScript", 21, 0, 0, 0, 4, 25
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/admin/add-facility/page.jsx", "JavaScript JSX", 0, 0, 0, 0, -6, -6
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/admin/employee/page.jsx", "JavaScript JSX", 0, 1, 0, 0, 2, 3
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/admin/facility/page.jsx", "JavaScript JSX", 0, -3, 0, 0, -1, -4
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/admin/inventory-transactions/page.jsx", "JavaScript JSX", 0, 330, 0, 14, 46, 390
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/admin/page.jsx", "JavaScript JSX", 0, 55, 0, 0, 17, 72
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/auditor/factory-orders/page.jsx", "JavaScript JSX", 0, -7, 0, 0, -3, -10
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/auditor/inventory-transactions/page.jsx", "JavaScript JSX", 0, -7, 0, 0, -3, -10
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/auditor/layout.jsx", "JavaScript JSX", 0, -26, 0, 0, -5, -31
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/auditor/page.jsx", "JavaScript JSX", 0, -46, 0, 0, -14, -60
+"/home/vis/Desktop/dbms_project/frontend/src/app/dashboard/auditor/sales/page.jsx", "JavaScript JSX", 0, -68, 0, -2, -30, -100
+"/home/vis/Desktop/dbms_project/frontend/src/app/globals.css", "CSS", 0, 0, 52, 0, 2, 54
+"/home/vis/Desktop/dbms_project/frontend/src/components/ChartComponents.jsx", "JavaScript JSX", 0, 392, 0, 9, 22, 423
+"/home/vis/Desktop/dbms_project/frontend/src/components/sidebar/AppSidebar.jsx", "JavaScript JSX", 0, 1, 0, -3, 0, -2
+"/home/vis/Desktop/dbms_project/frontend/src/components/sidebar/SiteHeader.jsx", "JavaScript JSX", 0, 3, 0, 0, 2, 5
+"/home/vis/Desktop/dbms_project/frontend/src/handlers/sidebarHandler.js", "JavaScript", 213, 0, 0, -3, 6, 216
+"Total", "-", 289, 625, 52, 15, 45, 1026

@@ -4,7 +4,7 @@ import * as React from "react"
 import { TrendingUp } from "lucide-react"
 import { Pie, PieChart } from "recharts"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-import { Bar, BarChart, YAxis } from "recharts"
+import { Bar, BarChart, LabelList, YAxis } from "recharts"
 
 import {
   Card,
@@ -31,70 +31,36 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-
-
-
-const chartData = [
-    { browser: "chrome", visitors: 275, fill: "oklch(0.646 0.222 41.116)" },
-    { browser: "safari", visitors: 200, fill: "oklch(0.6 0.118 184.704)" },
-    { browser: "firefox", visitors: 187, fill: "oklch(0.398 0.07 227.392)" },
-    { browser: "edge", visitors: 173, fill: "oklch(0.828 0.189 84.429)" },
-    { browser: "other", visitors: 90, fill: "oklch(0.769 0.188 70.08)" },
-  ]
-  
-
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
-}
-
-export function PieChartComponent() {
+export function PieChartComponent({ ChartData, ChartConfig, ChartDataKey, ChartNameKey }) {
   return (
-    <Card className="flex flex-col  shadow-none">
+    <Card className="flex flex-col shadow-none h-full">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Top 5 Brands v/s Sales</CardTitle>
+        {/* <CardDescription>January - June 2024</CardDescription> */}
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
-          config={chartConfig}
+          config={ChartConfig}
           className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
         >
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <Pie data={chartData} dataKey="visitors" label nameKey="browser" />
+            <Pie
+              data={ChartData}
+              dataKey={ChartDataKey}
+              label nameKey={ChartNameKey}
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      {/* <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Showing total visitors for the last 6 months
         </div>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   )
 }
@@ -213,6 +179,7 @@ export function AreaChartComponent() {
   const filteredData = areaChartData.filter((item) => {
     const date = new Date(item.date)
     const referenceDate = new Date("2024-06-30")
+    const today = new Date();
     let daysToSubtract = 90
     if (timeRange === "30d") {
       daysToSubtract = 30
@@ -259,32 +226,32 @@ export function AreaChartComponent() {
           className="aspect-auto h-[250px] w-full"
         >
           <AreaChart data={filteredData}>
-          <defs>
-  <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-    <stop
-      offset="5%"
-      stopColor="#4F46E5" 
-      stopOpacity={0.8}
-    />
-    <stop
-      offset="95%"
-      stopColor="#C7D2FE" 
-      stopOpacity={0.1}
-    />
-  </linearGradient>
-  <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-    <stop
-      offset="5%"
-      stopColor="#10B981" 
-      stopOpacity={0.8}
-    />
-    <stop
-      offset="95%"
-      stopColor="#6EE7B7"  
-      stopOpacity={0.1}
-    />
-  </linearGradient>
-</defs>
+            <defs>
+              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="#4F46E5"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="#C7D2FE"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="#10B981"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="#6EE7B7"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
 
             <CartesianGrid vertical={false} />
             <XAxis
@@ -339,74 +306,113 @@ export function AreaChartComponent() {
 
 
 
-
-const barChartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-]
-
-const barChartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
-}
-
-export function BarChartComponent() {
+export function BarChartComponent({ ChartTitle, LeftMargin, TooltipWidth, ChartData, ChartConfig, XAxisDataKey, YAxisDataKey }) {
   return (
-    <Card>
+    <Card className="shadow-none h-full">
       <CardHeader>
-        <CardTitle>Bar Chart - Mixed</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>{ChartTitle}</CardTitle>
+        {/* <CardDescription>January - June 2024</CardDescription> */}
       </CardHeader>
       <CardContent>
-        <ChartContainer config={barChartConfig}>
+        <ChartContainer config={ChartConfig}>
           <BarChart
             accessibilityLayer
-            data={barChartData}
+            data={ChartData}
             layout="vertical"
             margin={{
-              left: 0,
+              left: LeftMargin,
             }}
           >
             <YAxis
-              dataKey="browser"
+              dataKey={YAxisDataKey}
               type="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
               tickFormatter={(value) =>
-                barChartConfig[value]?.label
+                ChartConfig[value]?.label
               }
             />
-            <XAxis dataKey="visitors" type="number" hide />
+            <XAxis dataKey={XAxisDataKey} type="number" hide />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={
+                <ChartTooltipContent
+                  hideLabel
+                  className={`!w-${TooltipWidth}`} // Add custom width here
+                />
+              }
             />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+
+            <Bar dataKey={XAxisDataKey} layout="vertical" radius={5} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  )
+}
+
+export function BarChartVerticalComponent({ ChartTitle, RightMargin, TooltipWidth, ChartData, ChartConfig, XAxisDataKey, YAxisDataKey }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{ChartTitle}</CardTitle>
+        {/* <CardDescription>January - June 2024</CardDescription> */}
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={ChartConfig}>
+          <BarChart
+            accessibilityLayer
+            data={ChartData}
+            layout="vertical"
+            margin={{
+              right: RightMargin,
+            }}
+          >
+            <CartesianGrid horizontal={false} />
+            <YAxis
+              dataKey={YAxisDataKey}
+              type="category"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+              hide
+            />
+            <XAxis dataKey={XAxisDataKey} type="number" hide />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent 
+                  // indicator="line"
+                  hideIndicator
+                  hideLabel
+                  className={`!w-${TooltipWidth}`} 
+                />
+              }
+            />
+            <Bar
+              dataKey={XAxisDataKey}
+              layout="vertical"
+              fill="var(--color-desktop)"
+              radius={4}
+            >
+              <LabelList
+                dataKey={YAxisDataKey}
+                position="insideLeft"
+                offset={8}
+                className="fill-[#ffffff]"
+                fontSize={13}
+                formatter={(value) => value}
+              />
+              <LabelList
+                dataKey={XAxisDataKey}
+                position="right"
+                offset={8}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -421,3 +427,4 @@ export function BarChartComponent() {
     </Card>
   )
 }
+

@@ -9,6 +9,7 @@ const customerRoutes = require("./routes/customerRoutes");
 const brandRoutes = require("./routes/brandRoutes");
 const productRoutes = require("./routes/productRoutes");
 const transactionRoutes = require("./routes/transactionsRoutes");
+const dataRoutes = require("./routes/dataRoutes");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/customer", customerRoutes);
 app.use("/api/brand", brandRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/data", dataRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
