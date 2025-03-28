@@ -16,13 +16,9 @@
         FOREIGN KEY (works_in) REFERENCES facility(facility_ID) ON DELETE SET NULL
     );
 
-<<<<<<< HEAD
-INSERT INTO employee (employee_name, position, works_in, password)
-VALUES ('admin1', 'admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJlItrnBJIphQALN6');
-=======
     INSERT INTO employee (employee_name, position, works_in, password)
-    VALUES ('admin1', 'admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJlItrnBJIphQALN6');
->>>>>>> 8dde8100f47e535bd0c34982ea8f54d4f2b95210
+    VALUES ('admin1', 'Admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJlItrnBJIphQALN6');
+
 
 
     -- Create Brand Table
@@ -100,15 +96,7 @@ VALUES ('admin1', 'admin', NULL, '$2b$10$rREnrqYS97P5ycjz6CNCNejzq1rrVrLbntroJJl
         quantity INT NOT NULL
     );
 
-<<<<<<< HEAD
--- Adding Constraints
-ALTER TABLE product ADD CONSTRAINT positive_price CHECK (price >= 0);
-ALTER TABLE sales ADD CONSTRAINT sales_positive_quantity CHECK (quantity > 0);
-ALTER TABLE factory_orders ADD CONSTRAINT factory_orders_positive_quantity CHECK (quantity > 0);
-ALTER TABLE inventory_transactions ADD CONSTRAINT inventory_transactions_positive_quantity CHECK (quantity > 0);
-ALTER TABLE stock ADD CONSTRAINT stock_positive_quantity CHECK (quantity > 0);
-ALTER TABLE stock ADD CONSTRAINT positive_reorder_level CHECK (reorder_level > 0);
-=======
+
     -- Adding Constraints
     ALTER TABLE product ADD CONSTRAINT positive_price CHECK (price >= 0);
     ALTER TABLE sales ADD CONSTRAINT sales_positive_quantity CHECK (quantity > 0);
@@ -116,4 +104,4 @@ ALTER TABLE stock ADD CONSTRAINT positive_reorder_level CHECK (reorder_level > 0
     ALTER TABLE inventory_transactions ADD CONSTRAINT inventory_transactions_positive_quantity CHECK (quantity > 0);
     ALTER TABLE stock ADD CONSTRAINT stock_positive_quantity CHECK (quantity > 0);
     ALTER TABLE stock ADD CONSTRAINT positive_reorder_level CHECK (reorder_level > 0);
->>>>>>> 8dde8100f47e535bd0c34982ea8f54d4f2b95210
+

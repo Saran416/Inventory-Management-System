@@ -100,7 +100,7 @@ exports.employeeExists = async (req, res) => {
 
 exports.addAdmin = async (req, res) => {
   const { employee_name, password } = req.body;
-  const position = "admin";
+  const position = "Admin";
 
   try {
     const [existingUser] = await pool.query(
@@ -167,7 +167,7 @@ exports.addAuditor = async (req, res) => {
 
 exports.addWarehouseManager = async (req, res) => {
   const { employee_name, facility: warehouseLocation, password } = req.body;
-  const position = "warehouse_manager";
+  const position = "Warehouse Manager";
 
   try {
     const [existingUser] = await pool.query(
@@ -213,7 +213,7 @@ exports.addWarehouseManager = async (req, res) => {
 
 exports.addWarehouseEmployee = async (req, res) => {
   const { employee_name, facility: warehouseLocation, password } = req.body;
-  const position = "warehouse_employee";
+  const position = "Warehouse Employee";
 
   try {
     const [existingUser] = await pool.query(
@@ -265,7 +265,7 @@ exports.addWarehouseEmployee = async (req, res) => {
 
 exports.addStoreManager = async (req, res) => {
   const { employee_name, facility: storeLocation, password } = req.body;
-  const position = "store_manager";
+  const position = "Store Manager";
 
   try {
     const [existingUser] = await pool.query(
@@ -313,7 +313,7 @@ exports.addStoreManager = async (req, res) => {
 
 exports.addStoreEmployee = async (req, res) => {
   const { employee_name, facility: storeLocation, password } = req.body;
-  const position = "store_employee";
+  const position = "Store Employee";
 
   try {
     const [existingUser] = await pool.query(
