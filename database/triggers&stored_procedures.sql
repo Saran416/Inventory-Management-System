@@ -67,3 +67,31 @@ END $$
 DELIMITER ;
 
 
+-- place new order to factory for warehouse manager
+
+delimiter //
+CREATE PROCEDURE PlaceOrderToFactory(
+    IN product_id INT,
+    IN order_quantity INT,
+    IN employee_id INT
+)
+BEGIN
+    -- Insert into factory_orders table
+    INSERT INTO factory_orders (product_ID, quantity, ordered_by)
+    VALUES (product_id, employee_id, order_quantity, FALSE);
+
+END //
+delimiter ;
+
+-- mark inventory transaction as accepted
+DELIMITER $$
+CREATE PROCEDURE MarkTransactionAsAccepted(
+    IN transaction_ID INT
+)
+BEGIN
+    -- Update the inventory transaction to mark it as accepted
+    UPDATE inventory_transactions
+    SET processed = 1
+    WHERE transaction_ID = transaction_ID;
+END $$
+DELIMITER ;
