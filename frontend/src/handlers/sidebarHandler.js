@@ -110,57 +110,55 @@ export function generateSidebarData(employee_name, position) {
       user: { name: employee_name, position },
       navTop: [
         { title: "Dashboard", url: "/dashboard/warehouse-manager", icon: SquareTerminal },
+        { title: "Inventory transactions", url: "/dashboard/warehouse-manager/inventory-transactions" },
+        { title: "Stock", url: "/dashboard/warehouse-manager/stock" },
+        { title: "Sales", url: "/dashboard/warehouse-manager/sales" },
+        { title: "Request stock", url: "/dashboard/warehouse-manager/request-stock" },
       ],
       
-      navMain: [
-        {
-          title: "Employee",
-          url: "#",
-          icon: Users,
-          isActive: false,
-          items: [
-            { title: "View/Delete employee", url: "/dashboard/admin/employee" },
-            { title: "Add employee", url: "/dashboard/admin/add-employee" },
-          ],
-        },
-        {
-          title: "Facility",
-          url: "#",
-          icon: Store,
-          isActive: false,
-          items: [
-            { title: "View/Delete facility", url: "/dashboard/admin/facility" },
-            { title: "Add facility", url: "/dashboard/admin/add-facility" },
-          ],
-        },
-        {
-          title: "Brands",
-          url: "#",
-          icon: FolderKanban,
-          isActive: false,
-          items: [
-            { title: "View/Delete brand", url: "/dashboard/admin/brand" },
-            { title: "Add brand", url: "/dashboard/admin/add-brand" },
-          ],
-        },
-        {
-          title: "Products",
-          url: "#",
-          icon: FolderKanban,
-          isActive: false,
-          items: [
-            { title: "View/Delete product", url: "/dashboard/admin/product" },
-            { title: "Add product", url: "/dashboard/admin/add-product" },
-          ],
-        },
-      ],
-      utilities: [
-        { title: "Customers", url: "/dashboard/admin/customers" },
-        { title: "Stock", url: "/dashboard/admin/stock" },
-        { title: "Sales", url: "/dashboard/admin/sales" },
-        { title: "Inventory transactions", url: "/dashboard/admin/inventory-transactions" },
-        { title: "Factory orders", url: "/dashboard/admin/factory-orders" },
-      ],
+      // navMain: [
+      //   {
+      //     title: "Employee",
+      //     url: "#",
+      //     icon: Users,
+      //     isActive: false,
+      //     items: [
+      //       { title: "View/Delete employee", url: "/dashboard/admin/employee" },
+      //       { title: "Add employee", url: "/dashboard/admin/add-employee" },
+      //     ],
+      //   },
+      //   {
+      //     title: "Facility",
+      //     url: "#",
+      //     icon: Store,
+      //     isActive: false,
+      //     items: [
+      //       { title: "View/Delete facility", url: "/dashboard/admin/facility" },
+      //       { title: "Add facility", url: "/dashboard/admin/add-facility" },
+      //     ],
+      //   },
+      //   {
+      //     title: "Brands",
+      //     url: "#",
+      //     icon: FolderKanban,
+      //     isActive: false,
+      //     items: [
+      //       { title: "View/Delete brand", url: "/dashboard/admin/brand" },
+      //       { title: "Add brand", url: "/dashboard/admin/add-brand" },
+      //     ],
+      //   },
+      //   {
+      //     title: "Products",
+      //     url: "#",
+      //     icon: FolderKanban,
+      //     isActive: false,
+      //     items: [
+      //       { title: "View/Delete product", url: "/dashboard/admin/product" },
+      //       { title: "Add product", url: "/dashboard/admin/add-product" },
+      //     ],
+      //   },
+      // ],
+
     };
   } else if (position === "warehouse-employee") {
     return {

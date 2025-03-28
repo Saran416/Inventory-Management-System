@@ -14,14 +14,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import { CurrentOrdersTable } from './TableComponents';
+
 
 function AccordionComponent() {
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1">
-        <AccordionTrigger>Item 1</AccordionTrigger>
+        <AccordionTrigger>Currect orders</AccordionTrigger>
         <AccordionContent>
-          Content for Item 1 goes here. You can add any text or component.
+          <CurrentOrdersTable />
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
@@ -50,7 +52,7 @@ function DashBoard() {
       <div className="font-semibold tracking-tight text-3xl">Dashboard</div>
 
       <div className="grid grid-cols-12 gap-10 mt-10">
-        <div className="col-span-8">
+        <div className="col-span-12">
           <AccordionComponent />
         </div>
         
