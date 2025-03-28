@@ -83,8 +83,12 @@ GROUP BY sale_year
 ORDER BY sale_year;
 
 -- sales of last 30 days
-SELECT sale_ID, sale_time, facility_ID, employee_ID, customer_ID, product_ID, quantity
+SELECT 
+    DATE(sale_time) AS sale_date,  -- Extract only the date
+    COUNT(*) AS total_sales
 FROM sales
-WHERE sale_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-ORDER BY sale_time DESC;
+WHERE sale_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+GROUP BY sale_date
+ORDER BY sale_date DESC;
+
 
