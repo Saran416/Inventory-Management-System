@@ -77,9 +77,9 @@ export async function fetchInventoryTransactionsByWarehouseManagerID(start_date,
   }
 }
 
-export async function fetchFactoryOrders(start_date, end_date, employee_name, product_name, processed_status) {
+export async function fetchFactoryOrders(start_date, end_date, product_name, manager_ID) {
   try {
-    const queryParams = `?start_date=${encodeURIComponent(start_date)}&end_date=${encodeURIComponent(end_date)}&employee_name=${encodeURIComponent(employee_name)}&product_name=${encodeURIComponent(product_name)}&processed=${encodeURIComponent(processed_status)}`;
+    const queryParams = `?start_date=${encodeURIComponent(start_date)}&end_date=${encodeURIComponent(end_date)}&product_name=${encodeURIComponent(product_name)}&manager_ID=${manager_ID}`;
 
     const response = await fetch(`${API_URL}/transactions/fetch-factory-orders${queryParams}`, {
       method: "GET",
@@ -90,10 +90,35 @@ export async function fetchFactoryOrders(start_date, end_date, employee_name, pr
     if (!response.ok) {
       return { success: false, message: responseData.message || "Failed to fetch factory orders" };
     }
+    // console.log(responseData);
     return responseData;
       
   } catch (error) {
     console.error("Error fetching factory orders:", error);
+    return { 
+      success: false, 
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+}
+
+export async function addFactoryOrder(product_id, quantity, manager_ID) {
+  try {
+    const response = await fetch(`${API_URL}/transactions/add-factory-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ product_id, quantity, manager_ID }),
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return { success: false, message: responseData.message || "Failed to add factory order" };
+    }
+    console.log(responseData);
+    return responseData;
+      
+  } catch (error) {
+    console.error("Error adding factory order:", error);
     return { 
       success: false, 
       message: "Network error: Unable to connect to the server.",

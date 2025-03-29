@@ -14,22 +14,22 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import { CurrentOrdersTable } from './TableComponents';
+import { InventoryTransactionsTable, CurrentOrdersTable } from './TableComponents';
 
 
 function AccordionComponent() {
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1">
-        <AccordionTrigger>Currect orders</AccordionTrigger>
+        <AccordionTrigger>Current Orders</AccordionTrigger>
         <AccordionContent>
           <CurrentOrdersTable />
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
-        <AccordionTrigger>Item 2</AccordionTrigger>
+        <AccordionTrigger>Inventory Transactions</AccordionTrigger>
         <AccordionContent>
-          Content for Item 2 goes here. You can also add custom elements.
+          <InventoryTransactionsTable />
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-3">
