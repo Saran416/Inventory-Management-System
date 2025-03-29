@@ -106,17 +106,18 @@ CREATE PROCEDURE MarkTransactionAsCompleted(
     IN transaction_ID INT
 )
 BEGIN
-    -- Update the inventory transaction to mark it as completed
-    UPDATE inventory_transactions
-    SET processed = "completed"
-    WHERE transaction_ID = transaction_ID;
-
     -- update the stock table according to the transaction id
     DECLARE v_product_id INT;
     DECLARE v_facility_id INT;
     DECLARE v_quantity INT;
     DECLARE v_existing_stock INT;
     DECLARE v_employee_id INT;
+    
+    -- Update the inventory transaction to mark it as completed
+    UPDATE inventory_transactions
+    SET processed = "completed"
+    WHERE transaction_ID = transaction_ID;
+
 
     -- Get the transaction details
     SELECT product_ID, requested_to, quantity, requested_by
