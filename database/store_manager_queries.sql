@@ -105,36 +105,48 @@ DELIMITER $$
 CREATE PROCEDURE MarkTransactionAsCompleted(
     IN transaction_ID_arg INT
 )
-BEGIN
-    -- update the stock table according to the transaction id
-    DECLARE v_product_id INT;
-    DECLARE v_facility_id INT;
-    DECLARE v_quantity INT;
-    DECLARE v_existing_stock INT;
-    DECLARE v_employee_id INT;
-
-    -- Get the transaction details
-    SELECT product_ID, requested_to, quantity, requested_by
-    INTO v_product_id, v_facility_id, v_quantity, v_employee_id
-    FROM inventory_transactions
-    WHERE transaction_ID = transaction_ID_arg;
-
-    -- update the stock table with the quantity
-    SELECT quantity
-    INTO v_existing_stock
-    FROM stock
-    WHERE product_ID = v_product_id AND facility_ID = GetFacilityByEmployee(v_employee_id)
-    LIMIT 1;
-    -- Update stock
-    UPDATE stock
-    SET quantity = v_existing_stock + v_quantity
-    WHERE product_ID = v_product_id AND facility_ID = GetFacilityByEmployee(v_employee_id);
-
+BEGIN    
     -- Update the inventory transaction to mark it as completed
     UPDATE inventory_transactions
     SET processed = "completed"
     WHERE transaction_ID = transaction_ID_arg;
 
+END $$
+DELIMITER ;
 
+
+-- trigger to update stock after update
+DELIMITER $$
+CREATE TRIGGER update_stock_after_transaction
+AFTER UPDATE ON inventory_transactions
+FOR EACH ROW
+BEGIN
+    DECLARE v_existing_stock_store INT;
+    DECLARE v_existing_stock_warehouse INT;
+
+    IF NEW.processed = "completed" AND OLD.processed != 'completed' THEN
+        -- Check current stock for the product in the facility
+        SELECT quantity INTO v_existing_stock_store
+        FROM stock
+        WHERE product_ID = NEW.product_ID AND facility_ID = GetFacilityByEmployee(NEW.requested_by)
+        LIMIT 1;
+
+        SELECT quantity INTO v_existing_stock_warehouse
+        FROM stock
+        WHERE product_ID = NEW.product_ID AND facility_ID = NEW.requested_to
+        LIMIT 1;
+
+
+        -- Update stock
+        UPDATE stock
+        SET quantity = v_existing_stock_store + NEW.quantity
+        WHERE product_ID = NEW.product_ID AND facility_ID = GetFacilityByEmployee(NEW.requested_by);
+
+        UPDATE stock
+        SET quantity = v_existing_stock_warehouse - NEW.quantity
+        WHERE product_ID = NEW.product_ID AND facility_ID = NEW.requested_to;
+        
+    END IF;
+    
 END $$
 DELIMITER ;
