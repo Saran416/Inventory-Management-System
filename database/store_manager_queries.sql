@@ -112,6 +112,12 @@ BEGIN
     DECLARE v_quantity INT;
     DECLARE v_existing_stock INT;
     DECLARE v_employee_id INT;
+    
+    -- Update the inventory transaction to mark it as completed
+    UPDATE inventory_transactions
+    SET processed = "completed"
+    WHERE transaction_ID = transaction_ID;
+
 
     -- Update the inventory transaction to mark it as completed
     UPDATE inventory_transactions
