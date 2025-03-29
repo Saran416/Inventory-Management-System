@@ -3,7 +3,7 @@ SELECT
     it.transaction_ID, 
     it.Time AS transaction_time,
     p.name AS product_name, 
-    f_to.location AS requested_to_location,
+    f_from.location AS requested_from_location,
     e.employee_name AS requested_by_employee,
     it.quantity,
     it.processed

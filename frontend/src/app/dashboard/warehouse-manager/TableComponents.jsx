@@ -6,6 +6,7 @@ import { fetchSales } from "@/api/sales-call";
 import { fetchInventoryTransactions } from "@/api/transactions-calls";
 
 import { fetchInventoryTransactionsByStoreManagerID } from "@/api/transactions-calls";
+import { fetchInventoryTransactionsByWarehouseManagerID } from "@/api/transactions-calls";
 import { fetchEmployeeID } from "@/api/employee-call";
 
 import { debounce } from "lodash";
@@ -23,7 +24,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Check } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -57,81 +58,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner";
 
 
-
-
-
-export const columns = [
-  {
-    accessorKey: "transaction_ID",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Transaction ID
-        <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("transaction_ID")}</div>,
-  },
-  {
-    accessorKey: "transaction_time",
-    header: "Transaction time",
-    cell: ({ row }) => {
-      const rawDate = row.getValue("transaction_time");
-      const date = new Date(rawDate);
-      const formattedDate = date.toISOString().split("T")[0];
-      const formattedTime = date.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-      return (
-        <div className="capitalize">
-          {formattedDate} {formattedTime}
-          {/* {row.getValue("transaction_time")} */}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "product_name",
-    header: "Product name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("product_name")}</div>,
-  },
-  {
-    accessorKey: "requested_to_location",
-    header: "Requested from location",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_to_location")}</div>,
-  },
-  {
-    accessorKey: "requested_by_employee",
-    header: "Employee name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_by_employee")}</div>,
-  },
-  {
-    accessorKey: "quantity",
-    header: ({ column }) => (
-      <Button
-      variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-        Quantity
-        <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("quantity")}</div>,
-  },
-  {
-    accessorKey: "processed",
-    header: "Status",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
-  },
-];
 
 export function CurrentOrdersTable() {
   const [selectedStartDate, setSelectedStartDate] = useState("");
@@ -141,7 +83,7 @@ export function CurrentOrdersTable() {
 
 
   const [inventoryTransactionsData, setinventoryTransactionsData] = useState([]);
-  
+
   const fetchInventoryTransactionsWrapper = async (start_date, end_date, from_location, product_name) => {
     let start_date_query = start_date || "";
     let end_date_query = end_date || "";
@@ -149,16 +91,16 @@ export function CurrentOrdersTable() {
     let product_name_query = product_name || "";
 
     const storedUser = JSON.parse(localStorage.getItem("user"));
-        const employeeIDResponse = await fetchEmployeeID(storedUser.username);
-        if (!employeeIDResponse.success) {
-          toast.error("Error", {
-            description: employeeIDResponse.message,
-          });
-          return;
-        }
-        const manager_ID = employeeIDResponse.employee_ID;
-    
-    const inventoryTransactionsResponse = await fetchInventoryTransactionsByStoreManagerID(
+    const employeeIDResponse = await fetchEmployeeID(storedUser.username);
+    if (!employeeIDResponse.success) {
+      toast.error("Error", {
+        description: employeeIDResponse.message,
+      });
+      return;
+    }
+    const manager_ID = employeeIDResponse.employee_ID;
+
+    const inventoryTransactionsResponse = await fetchInventoryTransactionsByWarehouseManagerID(
       start_date_query,
       end_date_query,
       from_location_query,
@@ -169,7 +111,16 @@ export function CurrentOrdersTable() {
       console.error("Error fetching inventory transactions data:", inventoryTransactionsResponse.message);
       return;
     }
-    return inventoryTransactionsResponse.inventory_transactions;
+
+    // console.log(inventoryTransactionsResponse.inventory_transactions);
+    const filteredTransactions = inventoryTransactionsResponse.inventory_transactions.filter(
+      (transaction) => transaction.processed === "sent"
+    );
+    
+    console.log(filteredTransactions);
+    
+
+    return filteredTransactions;
   }
 
 
@@ -201,17 +152,131 @@ export function CurrentOrdersTable() {
         selectedFromLocation,
         selectedProductName
       );
-      console.log(inventoryTransactionsDdad);
       setinventoryTransactionsData(inventoryTransactionsDdad);
 
     }, 300);
-  
-    fetchData();
-  
-    return () => fetchData.cancel();
-  }, [ ]);
-  
 
+    fetchData();
+
+    return () => fetchData.cancel();
+  }, []);
+
+  const acceptTransactionHandler = async (transaction_ID) => {
+
+    // const response = await fetchInventoryTransactions(transaction_ID, "received");
+    // if (!response.success) {
+    //   toast.error("Error", {
+    //     description: response.message,
+    //   });
+    //   return;
+    // }
+    // toast.success("Success", {
+    //   description: "Order accepted successfully",
+    // });
+    // applyFilter();
+  }
+
+
+  const columns = [
+    {
+      accessorKey: "transaction_ID",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transaction ID
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => <div className="capitalize">{row.getValue("transaction_ID")}</div>,
+    },
+    {
+      accessorKey: "transaction_time",
+      header: "Transaction time",
+      cell: ({ row }) => {
+        const rawDate = row.getValue("transaction_time");
+        const date = new Date(rawDate);
+        const formattedDate = date.toISOString().split("T")[0];
+        const formattedTime = date.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return (
+          <div className="capitalize">
+            {formattedDate} {formattedTime}
+            {/* {row.getValue("transaction_time")} */}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "product_name",
+      header: "Product name",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("product_name")}</div>,
+    },
+    {
+      accessorKey: "request_from_location",
+      header: "Requested from location",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("request_from_location")}</div>,
+    },
+    {
+      accessorKey: "requested_by_employee",
+      header: "Employee name",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("requested_by_employee")}</div>,
+    },
+    {
+      accessorKey: "quantity",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Quantity
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => <div className="capitalize">{row.getValue("quantity")}</div>,
+    },
+    {
+      accessorKey: "processed",
+      header: "Status",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+   
+        return (
+          row.getValue("processed") === "sent" && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0 hover:text-green-500">
+                  <Check />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently accept the stock transaction request from the store.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => {acceptTransactionHandler(row.original.transaction_ID)}}>Accept</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )
+  
+         
+        )
+      },
+    },
+  ];
 
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -264,13 +329,13 @@ export function CurrentOrdersTable() {
                 <Label htmlFor="date" className="text-right">
                   Start Date
                 </Label>
-                <Input id="selectedStartDate" value={selectedStartDate} placeholder="YYYY-MM-DD" onChange={(e) => setSelectedStartDate(e.target.value)}  className="col-span-3" />
+                <Input id="selectedStartDate" value={selectedStartDate} placeholder="YYYY-MM-DD" onChange={(e) => setSelectedStartDate(e.target.value)} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="date" className="text-right">
                   End Date
                 </Label>
-                <Input id="selectedEndDate" value={selectedEndDate} placeholder="YYYY-MM-DD" onChange={(e) => setSelectedEndDate(e.target.value)}  className="col-span-3" />
+                <Input id="selectedEndDate" value={selectedEndDate} placeholder="YYYY-MM-DD" onChange={(e) => setSelectedEndDate(e.target.value)} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="location" className="text-right">
@@ -283,9 +348,9 @@ export function CurrentOrdersTable() {
                 <Label htmlFor="location" className="text-right">
                   Product
                 </Label>
-                <Input id="name" value={selectedProductName} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedProductName(e.target.value)}/>
+                <Input id="name" value={selectedProductName} placeholder="Name" className="col-span-3" onChange={(e) => setSelectedProductName(e.target.value)} />
               </div>
-              
+
             </div>
             <DialogFooter>
               <Button type="submit" onClick={applyFilter}>Apply Filter</Button>

@@ -1,11 +1,11 @@
 const pool = require("../config/db");
 
 exports.getInventoryTransactions = async (req, res) => {
-  const { 
-    start_date, 
-    end_date, 
-    from_location, 
-    to_location, 
+  const {
+    start_date,
+    end_date,
+    from_location,
+    to_location,
     product_name } = req.query;
 
 
@@ -73,12 +73,12 @@ exports.getInventoryTransactions = async (req, res) => {
     });
   }
 };
-  
+
 exports.getInventoryTransactionsByStoreManagerID = async (req, res) => {
   const { manager_ID,
-    start_date, 
-    end_date, 
-    from_location, 
+    start_date,
+    end_date,
+    to_location,
     product_name } = req.query;
 
   try {
@@ -112,9 +112,9 @@ exports.getInventoryTransactionsByStoreManagerID = async (req, res) => {
       queryParams.push(end_date);
     }
 
-    if (from_location) {
-      conditions.push(`f_from.location LIKE ?`);
-      queryParams.push(`%${from_location}%`);
+    if (to_location) {
+      conditions.push(`f_to.location LIKE ?`);
+      queryParams.push(`%${to_location}%`);
     }
 
     if (product_name) {
@@ -140,14 +140,89 @@ exports.getInventoryTransactionsByStoreManagerID = async (req, res) => {
   }
 }
 
+exports.getInventoryTransactionsByWarehouseManagerID = async (req, res) => {
+  const { manager_ID,
+    start_date,
+    end_date,
+    from_location,
+    product_name } = req.query;
+
+  console.log(manager_ID)
+  console.log(start_date)
+  console.log(end_date)
+  console.log(from_location)
+  console.log(product_name)
+
+  try {
+    let query = `
+      SELECT 
+        it.transaction_ID, 
+        it.Time AS transaction_time,
+        p.name AS product_name, 
+        f_from.location AS request_from_location,
+        e.employee_name AS requested_by_employee,
+        it.quantity,
+        it.processed
+      FROM inventory_transactions it
+      JOIN product p ON it.product_ID = p.product_ID
+      JOIN facility f_to ON it.requested_to = f_to.facility_ID
+      JOIN employee e ON it.requested_by = e.employee_ID
+      LEFT JOIN facility f_from ON e.works_in = f_from.facility_ID 
+      WHERE f_to.facility_ID = GetFacilityByEmployee(?)
+      
+    `;
+    let conditions = [];
+    let queryParams = [manager_ID];
+
+    if (start_date) {
+      conditions.push(`it.Time >= ?`);
+      queryParams.push(start_date);
+    }
+
+    if (end_date) {
+      conditions.push(`it.Time <= ?`);
+      queryParams.push(end_date);
+    }
+
+    if (from_location) {
+      conditions.push(`f_from.location LIKE ?`);
+      queryParams.push(`%${from_location}%`);
+    }
+
+    if (product_name) {
+      conditions.push(`p.name LIKE ?`);
+      queryParams.push(`%${product_name}%`);
+    }
+
+    conditions.push(`it.processed = 1 or it.processed = 2 or it.processed = 3`); // Only show processed transactions
+
+    if (conditions.length > 0) {
+      query += ` AND ` + conditions.join(" AND ");
+    }
+
+    console.log(query)
+    console.log(queryParams)
+
+    const [result] = await pool.query(query, queryParams);
+
+    res.json({ success: true, inventory_transactions: result });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
+
 exports.getFactoryOrders = async (req, res) => {
-  const { 
-    start_date, 
-    end_date, 
-    employee_name, 
+  const {
+    start_date,
+    end_date,
+    employee_name,
     product_name,
     processed,
-   } = req.query;
+  } = req.query;
 
   try {
     let query = `
@@ -179,7 +254,7 @@ exports.getFactoryOrders = async (req, res) => {
     if (employee_name) {
       conditions.push(`e.employee_name LIKE ?`);
       queryParams.push(`%${employee_name}%`);
-    } 
+    }
 
     if (product_name) {
       conditions.push(`p.name LIKE ?`);
@@ -227,6 +302,26 @@ exports.addInventoryTransaction = async (req, res) => {
     );
 
     res.json({ success: true, message: "Stock request added successfully." });
+  }
+  catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
+
+exports.markTransactionAsComplete = async (req, res) => {
+  const { transaction_ID } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      `CALL MarkTransactionAsCompleted(?)`,
+      [transaction_ID]
+    );
+
+    res.status(200).json({ success: true, message: "Transaction marked as complete." });
   }
   catch (error) {
     console.error("Database error:", error);

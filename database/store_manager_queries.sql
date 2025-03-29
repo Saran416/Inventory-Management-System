@@ -103,14 +103,9 @@ DELIMITER ;
 -- Mark Transaction as completed
 DELIMITER $$
 CREATE PROCEDURE MarkTransactionAsCompleted(
-    IN transaction_ID INT
+    IN transaction_ID_arg INT
 )
 BEGIN
-    -- Update the inventory transaction to mark it as completed
-    UPDATE inventory_transactions
-    SET processed = "completed"
-    WHERE transaction_ID = transaction_ID;
-
     -- update the stock table according to the transaction id
     DECLARE v_product_id INT;
     DECLARE v_facility_id INT;
@@ -118,11 +113,16 @@ BEGIN
     DECLARE v_existing_stock INT;
     DECLARE v_employee_id INT;
 
+    -- Update the inventory transaction to mark it as completed
+    UPDATE inventory_transactions
+    SET processed = "completed"
+    WHERE transaction_ID = transaction_ID_arg;
+
     -- Get the transaction details
     SELECT product_ID, requested_to, quantity, requested_by
     INTO v_product_id, v_facility_id, v_quantity, v_employee_id
     FROM inventory_transactions
-    WHERE transaction_ID = transaction_ID;
+    WHERE transaction_ID = transaction_ID_arg;
 
     -- update the stock table with the quantity
     SELECT quantity
