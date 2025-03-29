@@ -92,9 +92,22 @@ CREATE PROCEDURE RequestInventoryTransaction(
     IN stock_quantity INT
 )
 BEGIN
-    -- Insert the inventory transaction request
-    INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed)
-    VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity, "sent");
+    DECLARE v_product_count INT;
+
+    -- Check if the product exists in the employee's store
+    SELECT COUNT(*) INTO v_product_count
+    FROM stock
+    WHERE product_ID = prod_ID AND facility_ID = GetFacilityByEmployee(emp_ID);
+
+    -- Only insert if the product belongs to the employee's store
+    IF v_product_count > 0 THEN
+        INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed)
+        VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity, "sent");
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product does not belong to the employee''s store';
+    
+    END IF
+
 END $$
 
 DELIMITER ;
@@ -145,7 +158,7 @@ BEGIN
         UPDATE stock
         SET quantity = v_existing_stock_warehouse - NEW.quantity
         WHERE product_ID = NEW.product_ID AND facility_ID = NEW.requested_to;
-        
+
     END IF;
     
 END $$
