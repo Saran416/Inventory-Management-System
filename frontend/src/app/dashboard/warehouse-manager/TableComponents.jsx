@@ -488,7 +488,7 @@ export function CurrentOrdersTable() {
     console.log(filteredTransactions);
     
 
-    return filteredTransactions;
+    return response.factory_orders;
   }
 
 
@@ -603,7 +603,7 @@ export function CurrentOrdersTable() {
       cell: ({ row }) => {
    
         return (
-          row.getValue("processed") === "sent" && (
+          row.getValue("processed") === 0 && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0 hover:text-green-500">
@@ -614,7 +614,7 @@ export function CurrentOrdersTable() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently accept the stock transaction request from the store.
+                    This action cannot be undone. This will permanently accept the stock transaction request from the factory.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

@@ -102,6 +102,30 @@ export async function fetchFactoryOrders(start_date, end_date, product_name, man
   }
 }
 
+export async function addFactoryOrder(product_id, quantity, manager_ID) {
+  try {
+    const response = await fetch(`${API_URL}/transactions/add-factory-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ product_id, quantity, manager_ID }),
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return { success: false, message: responseData.message || "Failed to add factory order" };
+    }
+    console.log(responseData);
+    return responseData;
+      
+  } catch (error) {
+    console.error("Error adding factory order:", error);
+    return { 
+      success: false, 
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+}
+
 export async function addInventoryTransaction(warehouse_ID, emp_ID, prod_ID, stock_quantity) {
   try {
 

@@ -254,8 +254,6 @@ exports.getFactoryOrders = async (req, res) => {
       query += ` AND ` + conditions.join(" AND ");
     }
 
-    console.log(query);
-    console.log(queryParams);
     const [result] = await pool.query(query, queryParams);
 
     res.json({ success: true, factory_orders: result });
@@ -268,6 +266,27 @@ exports.getFactoryOrders = async (req, res) => {
   }
 }
 
+exports.addFactoryOrder = async (req, res) => {
+  const { 
+    product_id,
+    quantity,
+    manager_ID } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      `CALL PlaceOrderToFactory(?, ?, ?)`,
+      [product_id, quantity, manager_ID]
+    );
+
+    res.json({ success: true, message: "Factory order added successfully." });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+}
 exports.addInventoryTransaction = async (req, res) => {
   const {
     warehouse_ID,
