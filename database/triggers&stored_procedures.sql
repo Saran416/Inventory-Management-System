@@ -83,12 +83,50 @@ BEGIN
 END //
 delimiter ;
 
+-- stored procedureto accept factory order by warehouse manager
+DELIMITER $$
+CREATE PROCEDURE AcceptFactoryOrder(
+    IN order_ID_arg INT
+)
+BEGIN
+    -- Update the factory order to mark it as accepted
+    UPDATE factory_orders
+    SET processed = 1
+    WHERE order_ID = order_ID_arg;
+
+END $$
+DELIMITER ;
+
+-- trigger to update stock of warehouse after the factory order is accepted
+DELIMITER $$
+CREATE TRIGGER update_stock_after_factory_order
+AFTER UPDATE ON factory_orders
+FOR EACH ROW
+BEGIN
+    DECLARE v_existing_stock INT;
+
+    IF NEW.processed = 1 AND OLD.processed != 1 THEN
+        -- Check current stock for the product in the facility
+        SELECT quantity INTO v_existing_stock
+        FROM stock
+        WHERE product_ID = NEW.product_ID AND facility_ID = GetFacilityByEmployee(NEW.ordered_by)  -- Replace with actual facility ID
+        LIMIT 1;
+
+        -- Update stock
+        UPDATE stock
+        SET quantity = v_existing_stock + NEW.quantity
+        WHERE product_ID = NEW.product_ID AND facility_ID = GetFacilityByEmployee(NEW.ordered_by);  -- Replace with actual facility ID
+    END IF;
+END $$
+DELIMITER ;
+
 -- mark inventory transaction as accepted
 DELIMITER $$
 CREATE PROCEDURE MarkTransactionAsAccepted(
     IN transaction_ID_arg INT
 )
 BEGIN
+
     -- Update the inventory transaction to mark it as accepted
     UPDATE inventory_transactions
     SET processed = "accepted"
