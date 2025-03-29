@@ -77,9 +77,9 @@ export async function fetchInventoryTransactionsByWarehouseManagerID(start_date,
   }
 }
 
-export async function fetchFactoryOrders(start_date, end_date, employee_name, product_name, processed_status) {
+export async function fetchFactoryOrders(start_date, end_date, product_name, manager_ID) {
   try {
-    const queryParams = `?start_date=${encodeURIComponent(start_date)}&end_date=${encodeURIComponent(end_date)}&employee_name=${encodeURIComponent(employee_name)}&product_name=${encodeURIComponent(product_name)}&processed=${encodeURIComponent(processed_status)}`;
+    const queryParams = `?start_date=${encodeURIComponent(start_date)}&end_date=${encodeURIComponent(end_date)}&product_name=${encodeURIComponent(product_name)}&manager_ID=${manager_ID}`;
 
     const response = await fetch(`${API_URL}/transactions/fetch-factory-orders${queryParams}`, {
       method: "GET",
@@ -90,6 +90,7 @@ export async function fetchFactoryOrders(start_date, end_date, employee_name, pr
     if (!response.ok) {
       return { success: false, message: responseData.message || "Failed to fetch factory orders" };
     }
+    // console.log(responseData);
     return responseData;
       
   } catch (error) {

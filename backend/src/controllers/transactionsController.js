@@ -209,9 +209,8 @@ exports.getFactoryOrders = async (req, res) => {
   const {
     start_date,
     end_date,
-    employee_name,
     product_name,
-    processed,
+    manager_ID
   } = req.query;
 
   try {
@@ -220,16 +219,16 @@ exports.getFactoryOrders = async (req, res) => {
         fo.order_ID, 
         fo.order_time, 
         p.name AS product_name, 
-        e.employee_name AS ordered_by_employee, 
         fo.quantity, 
         fo.processed
       FROM factory_orders fo
       JOIN product p ON fo.product_ID = p.product_ID
       JOIN employee e ON fo.ordered_by = e.employee_ID
+      WHERE e.employee_ID = ?
     `;
 
     let conditions = [];
-    let queryParams = [];
+    let queryParams = [manager_ID];
 
     if (start_date) {
       conditions.push(`fo.order_time >= ?`);
@@ -241,30 +240,22 @@ exports.getFactoryOrders = async (req, res) => {
       queryParams.push(end_date);
     }
 
-    if (employee_name) {
-      conditions.push(`e.employee_name LIKE ?`);
-      queryParams.push(`%${employee_name}%`);
-    }
 
     if (product_name) {
       conditions.push(`p.name LIKE ?`);
       queryParams.push(`%${product_name}%`);
     }
 
-    if (processed) {
-      if (processed === "TRUE") {
-        conditions.push(`fo.processed = TRUE`);
-      } else if (processed === "FALSE") {
-        conditions.push(`fo.processed = FALSE`);
-      }
-    }
+    conditions.push(`(fo.processed = TRUE or fo.processed = FALSE)`); 
 
-    conditions.push(`fo.processed = FALSE`);
+    // conditions.push(`fo.processed = FALSE`);
 
     if (conditions.length > 0) {
-      query += ` WHERE ` + conditions.join(" AND ");
+      query += ` AND ` + conditions.join(" AND ");
     }
 
+    console.log(query);
+    console.log(queryParams);
     const [result] = await pool.query(query, queryParams);
 
     res.json({ success: true, factory_orders: result });
@@ -343,3 +334,4 @@ exports.markTransactionAsAccepted = async (req, res) => {
 
 
 }
+
