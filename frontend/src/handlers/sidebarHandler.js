@@ -112,7 +112,6 @@ export function generateSidebarData(employee_name, position) {
         { title: "Dashboard", url: "/dashboard/warehouse-manager", icon: SquareTerminal },
         { title: "Inventory transactions", url: "/dashboard/warehouse-manager/inventory-transactions" },
         { title: "Stock", url: "/dashboard/warehouse-manager/stock" },
-        { title: "Sales", url: "/dashboard/warehouse-manager/sales" },
         { title: "Request stock", url: "/dashboard/warehouse-manager/request-stock" },
       ],
       

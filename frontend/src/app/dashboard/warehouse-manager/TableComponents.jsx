@@ -9,6 +9,8 @@ import { fetchInventoryTransactionsByStoreManagerID } from "@/api/transactions-c
 import { fetchInventoryTransactionsByWarehouseManagerID } from "@/api/transactions-calls";
 import { fetchEmployeeID } from "@/api/employee-call";
 
+import { markTrasactionAsAccepted } from "@/api/transactions-calls";
+
 import { debounce } from "lodash";
 
 import * as React from "react"
@@ -162,18 +164,24 @@ export function CurrentOrdersTable() {
   }, []);
 
   const acceptTransactionHandler = async (transaction_ID) => {
+    const response = await markTrasactionAsAccepted(transaction_ID);
+    if (!response.success) {
+      toast.error("Error", {
+        description: response.message,
+      });
+      return;
+    }
+    toast.success("Success", {
+      description: response.message,
+    });
+    const inventoryTransactionsDdad = await fetchInventoryTransactionsWrapper(
+      selectedStartDate,
+      selectedEndDate,
+      selectedFromLocation,
+      selectedProductName
+    );
+    setinventoryTransactionsData(inventoryTransactionsDdad);
 
-    // const response = await fetchInventoryTransactions(transaction_ID, "received");
-    // if (!response.success) {
-    //   toast.error("Error", {
-    //     description: response.message,
-    //   });
-    //   return;
-    // }
-    // toast.success("Success", {
-    //   description: "Order accepted successfully",
-    // });
-    // applyFilter();
   }
 
 

@@ -161,22 +161,6 @@ export default function InventoryTransactionsPage() {
     return () => fetchData.cancel();
   }, []);
 
-  const acceptTransactionHandler = async (transaction_ID) => {
-
-    // const response = await fetchInventoryTransactions(transaction_ID, "received");
-    // if (!response.success) {
-    //   toast.error("Error", {
-    //     description: response.message,
-    //   });
-    //   return;
-    // }
-    // toast.success("Success", {
-    //   description: "Order accepted successfully",
-    // });
-    // applyFilter();
-  }
-
-
   const columns = [
     {
       accessorKey: "transaction_ID",
@@ -251,38 +235,6 @@ export default function InventoryTransactionsPage() {
       accessorKey: "processed",
       header: "Status",
       cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
-    },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-
-        return (
-          row.getValue("processed") === "sent" && (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0 hover:text-green-500">
-                  <Check />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently accept the stock transaction request from the store.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => { acceptTransactionHandler(row.original.transaction_ID) }}>Accept</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          )
-
-
-        )
-      },
     },
   ];
 

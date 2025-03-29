@@ -125,15 +125,38 @@ export async function addInventoryTransaction(warehouse_ID, emp_ID, prod_ID, sto
   }
 }
 
-export async function markTransactionAsComplete(transaction_ID) {
+export async function markTransactionAsCompleted(transaction_ID) {
   try {
-    const response = await fetch(`${API_URL}/transactions/mark-transaction-as-complete`, {
+    const response = await fetch(`${API_URL}/transactions/mark-transaction-as-completed`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ transaction_ID }),
     });
 
     console.log(response);
+    const responseData = await response.json();
+    if (!response.ok) {
+      return { success: false, message: responseData.message || "Failed to accept transaction" };
+    }
+    return responseData;
+      
+  } catch (error) {
+    console.error("Error accepting transaction:", error);
+    return { 
+      success: false, 
+      message: "Network error: Unable to connect to the server.",
+    };
+  }
+}
+
+export async function markTrasactionAsAccepted(transaction_ID) {
+  try {
+    const response = await fetch(`${API_URL}/transactions/mark-transaction-as-accepted`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ transaction_ID }),
+    });
+
     const responseData = await response.json();
     if (!response.ok) {
       return { success: false, message: responseData.message || "Failed to accept transaction" };

@@ -74,122 +74,9 @@ import {
 
 import { CheckCheck } from "lucide-react"
 
-import { markTransactionAsComplete } from "@/api/transactions-calls";
-
-const acceptTransactionHandler = async (transaction_ID) => {
-  const acceptTransactionResponse = await markTransactionAsComplete(transaction_ID);
-  if (!acceptTransactionResponse.success) {
-    toast.error("Error", {
-      description: acceptTransactionResponse.message,
-    });
-    return;
-  }
-  toast.success("Transaction accepted successfully");
-  applyFilter();
-};
+import { markTransactionAsCompleted } from "@/api/transactions-calls";
 
 
-
-export const columns = [
-  {
-    accessorKey: "transaction_ID",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Transaction ID
-        <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("transaction_ID")}</div>,
-  },
-  {
-    accessorKey: "transaction_time",
-    header: "Transaction time",
-    cell: ({ row }) => {
-      const rawDate = row.getValue("transaction_time");
-      const date = new Date(rawDate);
-      const formattedDate = date.toISOString().split("T")[0];
-      const formattedTime = date.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-      return (
-        <div className="capitalize">
-          {formattedDate} {formattedTime}
-          {/* {row.getValue("transaction_time")} */}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "product_name",
-    header: "Product name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("product_name")}</div>,
-  },
-  {
-    accessorKey: "requested_to_location",
-    header: "Requested from location",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_to_location")}</div>,
-  },
-  {
-    accessorKey: "requested_by_employee",
-    header: "Employee name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("requested_by_employee")}</div>,
-  },
-  {
-    accessorKey: "quantity",
-    header: ({ column }) => (
-      <Button
-      variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-        Quantity
-        <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("quantity")}</div>,
-  },
-  {
-    accessorKey: "processed",
-    header: "Processed (sent/accepted/completed)",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
- 
-      return (
-        row.getValue("processed") === "accepted" && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0 hover:text-green-500">
-                <CheckCheck />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently accept the stock transaction from the warehouse.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => {acceptTransactionHandler(row.original.transaction_ID)}}>Accept</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-
-       
-      )
-    },
-  },
-];
 
 export default function InventoryTransactionsPage() {
   const [selectedStartDate, setSelectedStartDate] = useState("");
@@ -268,7 +155,120 @@ export default function InventoryTransactionsPage() {
     return () => fetchData.cancel();
   }, [ ]);
   
-
+  const acceptTransactionHandler = async (transaction_ID) => {
+    const acceptTransactionResponse = await markTransactionAsCompleted(transaction_ID);
+    if (!acceptTransactionResponse.success) {
+      toast.error("Error", {
+        description: acceptTransactionResponse.message,
+      });
+      return;
+    }
+    toast.success("Transaction accepted successfully");
+    applyFilter();
+  };
+  
+  
+  
+  const columns = [
+    {
+      accessorKey: "transaction_ID",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transaction ID
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => <div className="capitalize">{row.getValue("transaction_ID")}</div>,
+    },
+    {
+      accessorKey: "transaction_time",
+      header: "Transaction time",
+      cell: ({ row }) => {
+        const rawDate = row.getValue("transaction_time");
+        const date = new Date(rawDate);
+        const formattedDate = date.toISOString().split("T")[0];
+        const formattedTime = date.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return (
+          <div className="capitalize">
+            {formattedDate} {formattedTime}
+            {/* {row.getValue("transaction_time")} */}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "product_name",
+      header: "Product name",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("product_name")}</div>,
+    },
+    {
+      accessorKey: "requested_to_location",
+      header: "Requested from location",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("requested_to_location")}</div>,
+    },
+    {
+      accessorKey: "requested_by_employee",
+      header: "Employee name",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("requested_by_employee")}</div>,
+    },
+    {
+      accessorKey: "quantity",
+      header: ({ column }) => (
+        <Button
+        variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+          Quantity
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => <div className="capitalize">{row.getValue("quantity")}</div>,
+    },
+    {
+      accessorKey: "processed",
+      header: "Processed (sent/accepted/completed)",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("processed")}</div>,
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+   
+        return (
+          row.getValue("processed") === "accepted" && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0 hover:text-green-500">
+                  <CheckCheck />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently accept the stock transaction from the warehouse.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => {acceptTransactionHandler(row.original.transaction_ID)}}>Accept</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )
+  
+         
+        )
+      },
+    },
+  ];
 
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);

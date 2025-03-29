@@ -116,12 +116,6 @@ BEGIN
     -- Update the inventory transaction to mark it as completed
     UPDATE inventory_transactions
     SET processed = "completed"
-    WHERE transaction_ID = transaction_ID;
-
-
-    -- Update the inventory transaction to mark it as completed
-    UPDATE inventory_transactions
-    SET processed = "completed"
     WHERE transaction_ID = transaction_ID_arg;
 
     -- Get the transaction details
@@ -140,6 +134,11 @@ BEGIN
     UPDATE stock
     SET quantity = v_existing_stock + v_quantity
     WHERE product_ID = v_product_id AND facility_ID = GetFacilityByEmployee(v_employee_id);
+
+    -- Update the inventory transaction to mark it as completed
+    UPDATE inventory_transactions
+    SET processed = "completed"
+    WHERE transaction_ID = transaction_ID;
 
 
 END $$

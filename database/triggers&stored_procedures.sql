@@ -86,13 +86,13 @@ delimiter ;
 -- mark inventory transaction as accepted
 DELIMITER $$
 CREATE PROCEDURE MarkTransactionAsAccepted(
-    IN transaction_ID INT
+    IN transaction_ID_arg INT
 )
 BEGIN
     -- Update the inventory transaction to mark it as accepted
     UPDATE inventory_transactions
     SET processed = "accepted"
-    WHERE transaction_ID = transaction_ID;
+    WHERE transaction_ID = transaction_ID_arg;
 
 END $$
 DELIMITER ;

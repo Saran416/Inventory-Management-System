@@ -122,7 +122,7 @@ exports.getInventoryTransactionsByStoreManagerID = async (req, res) => {
       queryParams.push(`%${product_name}%`);
     }
 
-    conditions.push(`it.processed = 1 or it.processed = 2 or it.processed = 3`); // Only show processed transactions
+    conditions.push(`(it.processed = 1 or it.processed = 2 or it.processed = 3)`); // Only show processed transactions
 
     if (conditions.length > 0) {
       query += ` AND ` + conditions.join(" AND ");
@@ -147,12 +147,6 @@ exports.getInventoryTransactionsByWarehouseManagerID = async (req, res) => {
     from_location,
     product_name } = req.query;
 
-  console.log(manager_ID)
-  console.log(start_date)
-  console.log(end_date)
-  console.log(from_location)
-  console.log(product_name)
-
   try {
     let query = `
       SELECT 
@@ -169,7 +163,6 @@ exports.getInventoryTransactionsByWarehouseManagerID = async (req, res) => {
       JOIN employee e ON it.requested_by = e.employee_ID
       LEFT JOIN facility f_from ON e.works_in = f_from.facility_ID 
       WHERE f_to.facility_ID = GetFacilityByEmployee(?)
-      
     `;
     let conditions = [];
     let queryParams = [manager_ID];
@@ -194,14 +187,11 @@ exports.getInventoryTransactionsByWarehouseManagerID = async (req, res) => {
       queryParams.push(`%${product_name}%`);
     }
 
-    conditions.push(`it.processed = 1 or it.processed = 2 or it.processed = 3`); // Only show processed transactions
+    conditions.push(`(it.processed = 1 or it.processed = 2 or it.processed = 3)`); // Only show processed transactions
 
     if (conditions.length > 0) {
       query += ` AND ` + conditions.join(" AND ");
     }
-
-    console.log(query)
-    console.log(queryParams)
 
     const [result] = await pool.query(query, queryParams);
 
@@ -312,7 +302,7 @@ exports.addInventoryTransaction = async (req, res) => {
   }
 }
 
-exports.markTransactionAsComplete = async (req, res) => {
+exports.markTransactionAsCompleted = async (req, res) => {
   const { transaction_ID } = req.body;
 
   try {
@@ -330,4 +320,26 @@ exports.markTransactionAsComplete = async (req, res) => {
       message: "Internal server error. Please try again later.",
     });
   }
+}
+
+exports.markTransactionAsAccepted = async (req, res) => {
+  const { transaction_ID } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      `CALL MarkTransactionAsAccepted(?)`,
+      [transaction_ID]
+    );
+
+    res.status(200).json({ success: true, message: "Transaction marked as accepted." });
+  }
+  catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
+  }
+
+
 }
