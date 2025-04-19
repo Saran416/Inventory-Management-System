@@ -132,9 +132,3 @@ ER Diagram is available [here](https://lucid.app/lucidchart/94821bcf-9074-4075-b
 5. **Ensure MySQL is running** and the database is initialized using provided schema files.
 
 ---
-
-## 📬 Contact
-
-For queries or collaboration, reach out to any of the authors via their respective IIT Hyderabad emails.
-
----
