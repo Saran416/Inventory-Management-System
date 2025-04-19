@@ -92,9 +92,31 @@ CREATE PROCEDURE RequestInventoryTransaction(
     IN stock_quantity INT
 )
 BEGIN
-    -- Insert the inventory transaction request
-    INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed)
-    VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity, "sent");
+    DECLARE v_facility_ID INT;
+    DECLARE v_product_count INT;
+
+    -- Get the facility ID where the employee works
+    SET v_facility_ID = GetFacilityByEmployee(emp_ID);
+
+    -- Check if the product exists in the employee's store
+    SELECT COUNT(*) INTO v_product_count
+    FROM stock
+    WHERE product_ID = prod_ID AND facility_ID = v_facility_ID;
+
+    -- If the product exists, insert the transaction
+    IF v_product_count > 0 THEN
+        INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed)
+        VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity, "sent");
+
+    -- If the product does not exist, add it to the stock with a reorder level
+    ELSE
+        INSERT INTO stock (product_ID, facility_ID, quantity, reorder_level)
+        VALUES (prod_ID, v_facility_ID, 0, 0);  -- Set initial quantity as 0 and reorder level to 10
+
+        INSERT INTO inventory_transactions (product_ID, requested_to, requested_by, quantity, processed)
+        VALUES (prod_ID, warehouse_ID, emp_ID, stock_quantity, "sent");
+    END IF;
+
 END $$
 
 DELIMITER ;
@@ -145,7 +167,7 @@ BEGIN
         UPDATE stock
         SET quantity = v_existing_stock_warehouse - NEW.quantity
         WHERE product_ID = NEW.product_ID AND facility_ID = NEW.requested_to;
-        
+
     END IF;
     
 END $$

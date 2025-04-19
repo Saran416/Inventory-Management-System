@@ -77,8 +77,8 @@ CREATE PROCEDURE PlaceOrderToFactory(
 )
 BEGIN
     -- Insert into factory_orders table
-    INSERT INTO factory_orders (product_ID, quantity, ordered_by)
-    VALUES (product_id, employee_id, order_quantity, FALSE);
+    INSERT INTO factory_orders (product_ID, quantity, ordered_by, processed)
+    VALUES (product_id, order_quantity, employee_id, FALSE);
 
 END //
 delimiter ;

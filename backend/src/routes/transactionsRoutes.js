@@ -2,6 +2,7 @@ const express = require("express");
 const {
     getInventoryTransactions,
     getFactoryOrders,
+    addFactoryOrder,
     getInventoryTransactionsByStoreManagerID,
     getInventoryTransactionsByWarehouseManagerID,
     addInventoryTransaction,
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.get("/fetch-inventory-transactions", getInventoryTransactions);
 router.get("/fetch-factory-orders", getFactoryOrders);
+router.post("/add-factory-order", addFactoryOrder);
 router.get("/fetch-inventory-transactions-by-store-manager-id", getInventoryTransactionsByStoreManagerID);
 router.get("/fetch-inventory-transactions-by-warehouse-manager-id", getInventoryTransactionsByWarehouseManagerID);
 router.post("/add-inventory-transaction", addInventoryTransaction);
